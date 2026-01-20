@@ -1,0 +1,287 @@
+/* Google Fonts - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+.register-page-wrapper * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.register-page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #E3F2FD; /* change  page color background here */
+    padding: 40px 20px;
+}
+
+.register-page-wrapper .register-container {
+    max-width: 500px;
+    width: 100%;
+}
+
+.register-page-wrapper .register-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 35px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.register-page-wrapper .register-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.register-page-wrapper .register-header h2 {
+    color: #232836;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.register-page-wrapper .register-header p {
+    color: #8b8b8b;
+    font-size: 14px;
+}
+
+/* Form Group */
+.register-page-wrapper .form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+/* Input Wrapper for Floating Labels */
+.register-page-wrapper .input-wrapper {
+    position: relative;
+}
+
+/* Password Wrapper with Eye Icon */
+.register-page-wrapper .password-wrapper {
+    position: relative;
+}
+
+/* Eye Icon for Password Toggle */
+.register-page-wrapper .eye-icon {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #8b8b8b;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+.register-page-wrapper .eye-icon:hover {
+    color: #0171d3;
+}
+
+/* Adjust password input padding to make room for icon */
+.register-page-wrapper .password-wrapper input {
+    padding-right: 45px;
+}
+
+/* Input Fields */
+.register-page-wrapper .form-control {
+    width: 100%;
+    padding: 15px 16px;
+    border: 1px solid #CACACA;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #232836;
+    outline: none;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.register-page-wrapper .form-control:focus {
+    border-color: #0171d3;
+    box-shadow: 0 0 0 3px rgba(1, 113, 211, 0.1);
+}
+
+.register-page-wrapper .form-control::placeholder {
+    color: #9499b7;
+}
+
+/* Floating Label (if you want to use it instead of placeholder) */
+.register-page-wrapper .floating-label {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9499b7;
+    font-size: 15px;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    background: #fff;
+    padding: 0 4px;
+}
+
+.register-page-wrapper .form-control:focus ~ .floating-label,
+.register-page-wrapper .form-control:not(:placeholder-shown) ~ .floating-label {
+    top: 0;
+    font-size: 12px;
+    color: #0171d3;
+}
+
+/* Radio Buttons for Gender */
+.register-page-wrapper .field-label {
+    display: block;
+    color: #232836;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.register-page-wrapper .radio-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.register-page-wrapper .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #232836;
+    font-size: 14px;
+}
+
+.register-page-wrapper .radio-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #0171d3;
+}
+
+.register-page-wrapper .radio-label span {
+    user-select: none;
+}
+
+/* Date Input Styling */
+.register-page-wrapper input[type="date"] {
+    color: #232836;
+}
+
+.register-page-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.5);
+}
+
+/* Error States */
+.register-page-wrapper .form-group.has-error .form-control {
+    border-color: #dc3545;
+}
+
+.register-page-wrapper .form-group.has-error .form-control:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.register-page-wrapper .error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 6px;
+    display: block;
+}
+
+.register-page-wrapper .error-box {
+    background: #f8d7da;
+    border: 1px solid #dc3545;
+    color: #721c24;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* Help Text */
+.register-page-wrapper .help-text {
+    display: block;
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* Submit Button */
+.register-page-wrapper .submit-btn {
+    width: 100%;
+    padding: 16px;
+    background-color: #0171d3;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.register-page-wrapper .submit-btn:hover {
+    background-color: #016dcb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(1, 113, 211, 0.3);
+}
+
+.register-page-wrapper .submit-btn:active {
+    transform: translateY(0);
+}
+
+/* Login Link */
+.register-page-wrapper .login-link {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.register-page-wrapper .login-link p {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.register-page-wrapper .login-link a {
+    color: #0171d3;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.register-page-wrapper .login-link a:hover {
+    color: #016dcb;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+    .register-page-wrapper .register-card {
+        padding: 30px 25px;
+    }
+    
+    .register-page-wrapper .register-header h2 {
+        font-size: 24px;
+    }
+    
+    .register-page-wrapper .form-control {
+        padding: 13px 14px;
+        font-size: 14px;
+    }
+    
+    .register-page-wrapper .radio-group {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .register-page-wrapper {
+        padding: 20px 15px;
+    }
+    
+    .register-page-wrapper .register-card {
+        padding: 25px 20px;
+    }
+}

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Authentication Page{% endblock %}
+
+{% block extra_css %}
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="register-page-wrapper">
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <h2>Verify Behavior</h2>
+            </div>
+
+            <form method="POST" novalidate id="captchaForm">
+                {% csrf_token %}
+                {{ form.captcha }}
+                <button type="submit" id="submitCaptcha">Submit</button>
+                
+                <!-- Loading indicator -->
+                <div id="captchaLoading" style="display: none; margin-top: 10px;">
+                    <p>Verifying...</p>
+                </div>
+                
+                <!-- Error message -->
+                <div id="captchaError" style="display: none; color: red; margin-top: 10px;"></div>
+            </form>
+
+            <div class="login-link">
+                <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('captchaForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent normal form submission
+    
+    const form = e.target;
+    const submitBtn = document.getElementById('submitCaptcha');
+    const loading = document.getElementById('captchaLoading');
+    const errorDiv = document.getElementById('captchaError');
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    loading.style.display = 'block';
+    errorDiv.style.display = 'none';
+    
+    // Get form data
+    const formData = new FormData(form);
+    
+    // Send AJAX request
+    fetch("{% url 'captcha_check' %}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // CAPTCHA verified! Redirect back to update_user with flag
+            window.location.href = "{% url 'update_user' %}?verified=true";
+        } else {
+            // Show error
+            errorDiv.textContent = data.error || 'Verification failed. Please try again.';
+            errorDiv.style.display = 'block';
+            submitBtn.disabled = false;
+            loading.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        errorDiv.textContent = 'An error occurred. Please try again.';
+        errorDiv.style.display = 'block';
+        submitBtn.disabled = false;
+        loading.style.display = 'none';
+    });
+});
+</script>
+{% endblock %}

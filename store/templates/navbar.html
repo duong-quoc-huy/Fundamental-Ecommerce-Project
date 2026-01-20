@@ -1,0 +1,156 @@
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+{% endblock %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="bi bi-fire"></i> Firefly E-commerce
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">
+                        <i class="bi bi-house-door"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about_us' %}">
+                        <i class="bi bi-info-circle"></i> About Us
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-grid"></i> Categories
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'home' %}">
+                                <span class="category-icon"><i class="bi bi-grid-3x3"></i></span>
+                                All Products
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'category' 'Phone' %}">
+                                <span class="category-icon"><i class="bi bi-phone"></i></span>
+                                Phone
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'category' 'Laptop' %}">
+                                <span class="category-icon"><i class="bi bi-laptop"></i></span>
+                                Laptop
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'category' 'Tablet' %}">
+                                <span class="category-icon"><i class="bi bi-tablet"></i></span>
+                                Tablet
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'category' 'Earphone' %}">
+                                <span class="category-icon"><i class="bi bi-earbuds"></i></span>
+                                Earphone
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'category' 'Headphone' %}">
+                                <span class="category-icon"><i class="bi bi-headphones"></i></span>
+                                Headphone
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'category' 'iPad' %}">
+                                <span class="category-icon"><i class="bi bi-tablet-landscape"></i></span>
+                                iPad
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <!-- Search Form -->
+            <form method="get" action="{% url 'search' %}" class="d-flex search-form me-3">
+                <input class="form-control me-2" type="search" name="q" placeholder="Search products...">
+                <button class="btn btn-outline-success" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+            
+            <!-- Cart and User Dropdown -->
+            <div class="d-flex align-items-center">
+                <!-- Cart Button -->
+                <a href="{% url 'cart_summary' %}" class="btn btn-outline-dark">
+                    <i class="bi-cart-fill me-1"></i>
+                    Cart
+                    <span class="badge cart-badge text-white ms-1 rounded-pill">{{cart|length}}</span>
+                </a>
+
+                <!-- User Dropdown (Authenticated) -->
+                {% if user.is_authenticated %}
+                <div class="user-dropdown">
+                    <div class="user-icon-btn authenticated">
+                        {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" alt="Profile Picture" class="user-icon-img">
+                        {% else %}
+                            <i class="bi bi-person-check"></i>
+                        {% endif %}
+                    </div>
+                    <div class="user-dropdown-menu">
+                        <div class="user-dropdown-body">
+                            <a href="{% url 'update_user'%}" class="dropdown-item-custom">
+                                <i class="bi bi-person"></i>
+                                <span>My Profile</span>
+                            </a>
+                            <a href="{% url 'payment:payment_history' %}" class="dropdown-item-custom">
+                                <i class="bi bi-bag"></i>
+                                <span>My Orders</span>
+                            </a>
+                            <a href="#!" class="dropdown-item-custom">
+                                <i class="bi bi-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                            <div class="dropdown-divider-custom"></div>
+                            <a href="{% url 'logout' %}" class="dropdown-item-custom">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Dropdown (Not Authenticated) -->
+                {% else %}
+                <div class="user-dropdown">
+                    <div class="user-icon-btn">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <div class="user-dropdown-menu">
+                        <div class="user-dropdown-header">
+                            <i class="bi bi-person-circle"></i>
+                            <p>Welcome, Guest!</p>
+                        </div>
+                        <div class="user-dropdown-body">
+                            <a href="{% url 'login' %}" class="dropdown-item-custom">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                <span>Login</span>
+                            </a>
+                            <a href="{% url 'register' %}" class="dropdown-item-custom">
+                                <i class="bi bi-person-plus"></i>
+                                <span>Register</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

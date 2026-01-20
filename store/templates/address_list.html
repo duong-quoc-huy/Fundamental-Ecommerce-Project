@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Addresses{% endblock %}
+
+{% block extra_css %}
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'css/update_user.css' %}">
+<style>
+    .address-card {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    .address-card:hover {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-color: #007bff;
+    }
+    
+    .address-card.default {
+        border: 2px solid #28a745;
+        background: #f8fff9;
+    }
+    
+    .default-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #28a745;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .address-content {
+        margin-bottom: 15px;
+    }
+    
+    .address-content p {
+        margin: 5px 0;
+        color: #333;
+    }
+    
+    .address-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .btn-action {
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-edit {
+        background: #007bff;
+        color: white;
+    }
+    
+    .btn-edit:hover {
+        background: #0056b3;
+    }
+    
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .btn-delete:hover {
+        background: #c82333;
+    }
+    
+    .btn-default {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .btn-default:hover {
+        background: #545b62;
+    }
+    
+    .btn-add-new {
+        display: inline-block;
+        padding: 12px 24px;
+        background: #28a745;
+        color: white;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    
+    .btn-add-new:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .btn-add-new i {
+        margin-right: 8px;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+    
+    .empty-state i {
+        font-size: 64px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="account-overview-wrapper">
+    <div class="account-container">
+        <!-- Left Sidebar - Tabs -->
+        <aside class="account-sidebar">
+            <div class="sidebar-header">
+                <h3>
+                    <i class='bx bx-user-circle'></i>
+                    Account Settings
+                </h3>
+            </div>
+            <ul class="tab-list">
+                <li class="tab-item">
+                    <a href="{% url 'update_user' %}" class="tab-link">
+                        <i class='bx bx-user'></i>
+                        <span>Personal Information</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="{% url 'update_password' %}" class="tab-link">
+                        <i class='bx bx-lock-alt'></i>
+                        <span>Change Password</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="{% url 'update_address' %}" class="tab-link active">
+                        <i class='bx bx-map'></i>
+                        <span>My Addresses</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="#" class="tab-link" data-tab="notifications">
+                        <i class='bx bx-bell'></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="#" class="tab-link" data-tab="security">
+                        <i class='bx bx-shield'></i>
+                        <span>Security</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Right Content Area -->
+        <main class="account-content">
+            <div class="content-header">
+                <h2>My Address Book</h2>
+                <p>Manage your shipping addresses</p>
+            </div>
+
+            <a href="{% url 'add_address' %}" class="btn-add-new">
+                <i class='bx bx-plus'></i>
+                Add New Address
+            </a>
+
+            {% if addresses %}
+                {% for address in addresses %}
+                <div class="address-card {% if address.is_default %}default{% endif %}">
+                    {% if address.is_default %}
+                        <span class="default-badge">Default</span>
+                    {% endif %}
+                    
+                    <div class="address-content">
+                        <p><strong>{{ address.address_line1 }}</strong></p>
+                        {% if address.address_line2 %}
+                            <p>{{ address.address_line2 }}</p>
+                        {% endif %}
+                        <p>{{ address.city }}, {{ address.state_province }} {{ address.zip_code }}</p>
+                        <p>{{ address.country }}</p>
+                        <p> Nickname of location: {{ address.nickname}} </p>
+                    </div>
+                    
+                    <div class="address-actions">
+                        <a href="{% url 'edit_address' address.id %}" class="btn-action btn-edit">
+                            <i class='bx bx-edit'></i> Edit
+                        </a>
+                        
+                        {% if not address.is_default %}
+                            <a href="{% url 'set_default_address' address.id %}" class="btn-action btn-default">
+                                <i class='bx bx-star'></i> Set as Default
+                            </a>
+                        {% endif %}
+                        
+                        <form method="POST" action="{% url 'delete_address' address.id %}" style="display: inline;" 
+                              onsubmit="return confirm('Are you sure you want to delete this address?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-action btn-delete">
+                                <i class='bx bx-trash'></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class='bx bx-map-pin'></i>
+                    <h3>No addresses yet</h3>
+                    <p>Add your first address to get started</p>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+{% endblock %}

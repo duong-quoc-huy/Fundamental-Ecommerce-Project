@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="author" content="Firefly E-Commerce" />
+        <meta name="google-site-verification" content="AoDuaHS2_8_XQF38pHqgMZEVpspph-VOu6pDIIhaVYk" />
+
+        <!-- SEO Meta Tags -->
+        <title>{% block meta_title %}Firefly E-Commerce{% endblock %}</title>
+        <meta name="description" content="{% block meta_description %}Shop premium products at Firefly E-Commerce. Fast shipping, quality guaranteed.{% endblock %}" />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}" />
+        
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="{% block og_type %}website{% endblock %}" />
+        <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+        <meta property="fb:app_id" content="1521215729157590" />
+        <meta property="og:title" content="{% block og_title %}Firefly E-Commerce{% endblock %}" />
+        <meta property="og:description" content="{% block og_description %}Shop premium products at Firefly E-Commerce{% endblock %}" />
+        <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/default-og-image.jpg' %}{% endblock %}" />
+        
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
+        <meta name="twitter:title" content="{% block twitter_title %}Firefly E-Commerce{% endblock %}" />
+        <meta name="twitter:description" content="{% block twitter_description %}Shop premium products at Firefly E-Commerce{% endblock %}" />
+        <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/default-og-image.jpg' %}{% endblock %}" />
+        
+        <!-- Additional SEO -->
+        <meta name="robots" content="{% block robots %}index, follow{% endblock %}" />
+
+
+        <!-- Messenger SEO -->
+        <meta property="og:image:secure_url" content="{% block og_image_secure %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/default-og-image.jpg' %}{% endblock %}" />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/firefly.ico' %}" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+        {% block extra_css %}{% endblock %}
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-B180T59JZZ"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-B180T59JZZ');
+        </script>
+                
+        {% block structured_data %}{% endblock %}
+    </head>
+    <body>
+        
+        {% include 'navbar.html' %}
+        {% if messages %}
+          {% for message in messages%}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong> {{message}} </strong>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div> 
+          {% endfor %}
+        {% endif %}       
+        {% block content%}
+
+        {% endblock %}
+        
+        <!-- Footer -->
+        <footer class="footer-gradient py-5 bg-dark">
+          <div class="container px-4 px-lg-5">
+            <div class="row">
+              <!-- About Section -->
+              <div class="col-lg-3 col-md-6 mb-4">
+                <h5 class="fw-bolder text-white mb-3">Firefly E-Commerce</h5>
+                <p class="text-white-50 small">Discover our passion for style and quality. Shop with confidence and elevate your wardrobe today.</p>
+              </div>
+              
+              <!-- Quick Links Section -->
+              <div class="col-lg-3 col-md-6 mb-4">
+                <h5 class="fw-bolder text-white mb-3">More Information</h5>
+                <ul class="list-unstyled">
+                  <li class="mb-2"><a href="{% url 'contact_us' %}" class="text-white-50 text-decoration-none hover-text-white">Contact</a></li>
+                  <li class="mb-2"><a href="{% url 'cookies' %}" class="text-white-50 text-decoration-none hover-text-white">Cookies</a></li>
+                  <li class="mb-2"><a href="{% url 'faq' %}" class="text-white-50 text-decoration-none hover-text-white">FAQ</a></li>
+                  <li class="mb-2"><a href="{% url 'privacy_policy' %}" class="text-white-50 text-decoration-none hover-text-white">Privacy</a></li>
+                  <li class="mb-2"><a href="{% url 'term_of_service' %}" class="text-white-50 text-decoration-none hover-text-white">Terms</a></li>
+                  <li class="mb-2"><a href="{% url 'data_deletion' %}" class="text-white-50 text-decoration-none hover-text-white">Data Deletion</a></li>
+                </ul>
+              </div>
+              
+              <!-- Contact Section -->
+              <div class="col-lg-3 col-md-6 mb-4">
+                <h5 class="fw-bolder text-white mb-3">Contact Info</h5>
+                <ul class="list-unstyled">
+                  <li class="mb-2"><i class="bi bi-geo-alt-fill text-primary me-2"></i><span class="text-white-50 small">3F Đ. Nguyễn Hữu Thọ, Tân Hưng, Quận 7, Thành phố Hồ Chí Minh</span></li>
+                  <li class="mb-2"><i class="bi bi-telephone-fill text-primary me-2"></i><span class="text-white-50 small">1900 2309</span></li>
+                  <li class="mb-2"><i class="bi bi-envelope-fill text-primary me-2"></i><span class="text-white-50 small">firefly_cs@gmail.com</span></li>
+                </ul>
+              </div>
+              
+              <!-- Newsletter Section -->
+              <div class="col-lg-3 col-md-6 mb-4">
+                <h5 class="fw-bolder text-white mb-3">Stay Updated</h5>
+                <p class="text-white-50 small mb-3">Subscribe for exclusive deals and new arrivals.</p>
+                <form method="POST" action="{% url 'newsletter_subscribe' %}" id="newsletter-form">
+                  {% csrf_token %}
+                  <div class="input-group">
+                    <input type="email" name="email" class="form-control bg-transparent border-light text-white" 
+                           placeholder="Your email" aria-label="Email" required>
+                    <button class="btn btn-primary" type="submit">Subscribe</button>
+                  </div>
+                  <div id="newsletter-message" class="mt-2 small"></div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Map Section with Header -->
+            <div class="map-header">
+                <h5 class="location-title">
+                  <i class="fa-solid fa-location-dot"></i>
+                  Our Location
+                </h5>
+                <p>Nguyen Tat Thanh University - Nguyen Huu Tho Campus</p>
+            </div>
+
+            <!-- Map with Wrapper -->
+            <div class="map-wrapper">
+                <div class="map-container">
+                    <div class="map-pin-icon">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d979.9708440710444!2d106.70157428425861!3d10.74347077543816!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f9fa1b72f8b%3A0x26780c08db949052!2sNguyen%20Tat%20Thanh%20University%20-%20Nguyen%20Huu%20Tho%20Campus!5e0!3m2!1sen!2s!4v1762949681962!5m2!1sen!2s"
+                        width="100%"
+                        height="400"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+            
+            <!-- Social Media Row -->
+            <hr class="my-4 border-secondary">
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <div class="d-flex justify-content-center justify-content-md-start mb-3 mb-md-0">
+                  <a href="#!" class="text-white-50 me-3 hover-text-white"><i class="bi bi-facebook fs-4"></i></a>
+                  <a href="#!" class="text-white-50 me-3 hover-text-white"><i class="bi bi-twitter fs-4"></i></a>
+                  <a href="#!" class="text-white-50 me-3 hover-text-white"><i class="bi bi-instagram fs-4"></i></a>
+                  <a href="#!" class="text-white-50 hover-text-white"><i class="bi bi-linkedin fs-4"></i></a>
+                </div>
+              </div>
+              <div class="col-md-6 text-center text-md-end">
+                <p class="text-white-50 small mb-0">&copy; Firefly E-Commerce 2025. All rights reserved.</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{% static 'js/scripts.js' %}"></script>
+
+        <!--Start of Tawk.to Script-->
+        <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/6934ab7937fc4e197cdb800b/1jbqrrl2i';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        })();
+        </script>
+        <!--End of Tawk.to Script-->
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('newsletter-form');
+            const messageDiv = document.getElementById('newsletter-message');
+            
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(form);
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Subscribing...';
+                    
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            messageDiv.className = 'mt-2 small text-success';
+                            messageDiv.textContent = data.message;
+                            form.reset();
+                        } else {
+                            messageDiv.className = 'mt-2 small text-warning';
+                            messageDiv.textContent = data.message;
+                        }
+                    })
+                    .catch(error => {
+                        messageDiv.className = 'mt-2 small text-danger';
+                        messageDiv.textContent = 'An error occurred. Please try again.';
+                    })
+                    .finally(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    });
+                });
+            }
+        });
+        </script>
+    </body>
+</html>

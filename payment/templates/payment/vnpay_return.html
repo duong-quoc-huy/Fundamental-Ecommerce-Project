@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết quả thanh toán</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .icon.success {
+            background: #d4edda;
+            color: #28a745;
+            animation: scaleIn 0.5s ease-out 0.2s both;
+        }
+
+        .icon.error {
+            background: #f8d7da;
+            color: #dc3545;
+            animation: shake 0.5s ease-out 0.2s both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        h2.text-success {
+            color: #28a745;
+        }
+
+        h2.text-danger {
+            color: #dc3545;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .info-item {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #212529;
+            font-weight: 600;
+        }
+
+        .redirect-notice {
+            margin-top: 30px;
+            padding: 15px;
+            background: #e7f3ff;
+            border-radius: 8px;
+            color: #004085;
+            font-size: 14px;
+        }
+
+        .countdown {
+            font-weight: 700;
+            color: #0056b3;
+        }
+
+        .btn-home {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-home:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if success %}
+        <div class="icon success">✓</div>
+        <h2 class="text-success">Thanh toán thành công!</h2>
+        
+        <div class="info-box">
+            <div class="info-item">
+                <span class="info-label">Mã đơn hàng:</span>
+                <span class="info-value">{{ order.order_number }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Mã giao dịch VNPay:</span>
+                <span class="info-value">{{ order.payment_transaction_id }}</span>
+            </div>
+        </div>
+        {% else %}
+        <div class="icon error">✕</div>
+        <h2 class="text-danger">Thanh toán thất bại</h2>
+        
+        <div class="info-box">
+            <p style="color: #721c24; margin: 0;">{{ message }}</p>
+        </div>
+        {% endif %}
+
+        <div class="redirect-notice">
+            Tự động chuyển về trang chủ sau <span class="countdown" id="countdown">5</span> giây...
+        </div>
+
+        <a href="/" class="btn-home">Về trang chủ ngay</a>
+    </div>
+
+    <script>
+        let timeLeft = 5;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            timeLeft--;
+            countdownElement.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                window.location.href = '/';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

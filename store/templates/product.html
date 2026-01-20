@@ -1,0 +1,845 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta_title %}{{ product.get_meta_title }}{% endblock %}
+{% block meta_description %}{{ product.get_meta_description }}{% endblock %}
+
+{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{% url 'product' slug=product.slug %}{% endblock %}
+
+{% block og_type %}product{% endblock %}
+{% block og_title %}{{ product.get_meta_title }}{% endblock %}
+{% block og_description %}{{ product.get_meta_description }}{% endblock %}
+{% block og_image %}{% if product.variants.first.images.first %}{{ request.scheme }}://{{ request.get_host }}{{ product.variants.first.images.first.image.url }}{% endif %}{% endblock %}
+
+{% block twitter_title %}{{ product.get_meta_title }}{% endblock %}
+{% block twitter_description %}{{ product.get_meta_description }}{% endblock %}
+{% block twitter_image %}{% if product.variants.first.images.first %}{{ request.scheme }}://{{ request.get_host }}{{ product.variants.first.images.first.image.url }}{% endif %}{% endblock %}
+
+{% block og_image_secure %}{% if product.variants.first and product.variants.first.images.first %}{{ request.scheme }}://{{ request.get_host }}{{ product.variants.first.images.first.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'assets/default-og-image.jpg' %}{% endif %}{% endblock %}
+
+
+{% block structured_data %}
+<!--
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.name }}",
+  "image": [
+    {% for variant in product.variants.all %}
+      {% for image in variant.images.all %}
+        "{{ request.scheme }}://{{ request.get_host }}{{ image.image.url }}"{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    {% endfor %}
+  ],
+  "description": "{{ product.get_meta_description }}",
+  "sku": "{{ product.id }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "Firefly E-Commerce"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'product' slug=product.slug %}",
+    "priceCurrency": "USD",
+    "price": "{% if product.is_sale %}{{ product.sale_price }}{% else %}{{ product.price }}{% endif %}",
+    "priceValidUntil": "2025-12-31",
+    "itemCondition": "https://schema.org/NewCondition",
+    "availability": "{% if product.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "247"
+  }
+}
+</script>
+-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ product.name }}",
+  "image": [
+    {% for variant in product.variants.all %}
+      {% for image in variant.images.all %}
+        "{{ request.scheme }}://{{ request.get_host }}{{ image.image.url }}"{% if not forloop.parentloop.last or not forloop.last %},{% endif %}
+      {% endfor %}
+    {% endfor %}
+  ],
+  "description": "{{ product.get_meta_description|escapejs }}",
+  "sku": "{{ product.id }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "Firefly E-Commerce"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'product' slug=product.slug %}",
+    "priceCurrency": "USD",
+    "price": "{% if product.is_sale %}{{ product.sale_price }}{% else %}{{ product.price }}{% endif %}",
+    "priceValidUntil": "2025-12-31",
+    "itemCondition": "https://schema.org/NewCondition",
+    "availability": "{% if product.stock > 0 %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "247"
+  }
+}
+</script>
+{% endblock %}
+
+{% block title %}{{ product.get_meta_title }}{% endblock %}
+
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/product.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="breadcrumb-wrapper">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">{{ product.category.name }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<!-- Main Container -->
+<div class="container product-page">
+  <div class="product-layout">
+    <!-- Left Side - Images -->
+
+    <!-- Replace your current image-section with this -->
+    <div class="image-section">
+        <!-- Main image display -->
+        <div class="main-image-container">
+            {% if product.variants.first.images.first %}
+            <img src="{{ product.variants.first.images.first.image.url }}" 
+                 alt="{{ product.name }} - {{ product.variants.first.color_name }}" 
+                 id="mainImage">
+            {% else %}
+            <img src="https://via.placeholder.com/400x400?text=No+Image" 
+                 alt="Product image" 
+                 id="mainImage">
+            {% endif %}
+        </div>
+        
+        <!-- Thumbnail gallery - THIS is where images will be dynamically loaded -->
+        <div class="thumbnail-gallery" id="image-gallery">
+            {% for image in product.variants.first.images.all %}
+            <div class="thumbnail {% if forloop.first %}active{% endif %}" 
+                 onclick="changeImage(this, '{{ image.image.url }}')">
+                <img src="{{ image.image.url }}" alt="Product thumbnail">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+    <!-- Right Side - Product Info -->
+    <div class="info-section">
+      <h1 class="product-title" id="productTitle" data-base-name="{{product.name}}">
+        {{product.name}} - {{product.variants.first.color_name}}
+      </h1>
+
+      <div class="rating-section">
+        <span class="stars">★★★★★</span>
+        <span class="rating-text">4.8 out of 5</span>
+        <a href="#reviews" class="rating-link">{{ product.comments.count }} reviews</a>
+        <button 
+            id="favorite-btn" 
+            data-product-id="{{ product.id }}"
+            class="btn btn-outline-danger">
+            {% if product.id in favorites %}
+              ❤️ 
+            {% else %}
+              🤍 
+            {% endif %}
+        </button>
+      </div>
+
+
+      <div class="price-section">
+        <div class="price"><span class="price-currency">$</span><span id="priceValue">{{product.price}}</span></div>
+        <div class="price-info">Free shipping on orders over $50</div>
+      </div>
+
+      <div class="stock-info">✓ In Stock - Ships within 2-3 business days</div>
+
+      <div class="option-group">
+        <label class="option-label">Color</label>
+        <div class="color-options">
+            {% for variant in product.variants.all %}
+              <div class="color-swatch"
+                   data-variant-id="{{ variant.id }}"
+                   style="background-color: {{ variant.color_code }};"
+                   onclick="selectColor(this, {{ variant.extra_price }})"
+                   title="{{ variant.color_name }}">
+              </div>
+            {% endfor %}
+        </div>
+      </div>
+
+      
+
+
+      <div class="option-group">
+        <label class="option-label">Size</label>
+        <div class="size-options">
+          <button class="size-btn active" onclick="selectSize(this, 78)">Small</button>
+          <button class="size-btn" onclick="selectSize(this, 95)">Medium</button>
+          <button class="size-btn" onclick="selectSize(this, 120)">Large</button>
+        </div>
+      </div>
+
+      <div class="option-group">
+        <label class="option-label">Quantity</label>
+        <div class="quantity-section">
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="changeQuantity(-1)">−</button>
+            <input type="number" class="quantity-input" value="1" min="1" max="{{product.stock}}" id="quantity">
+            <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+          </div>
+          <span style="color: #666; font-size: 14px;">Only {{product.stock}} left in stock</span>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button type="button" class="btn-primary" value="{{ product.id }}" id="add-cart">Add to Cart</button>
+        <button class="btn-secondary">Buy Now</button>
+      </div>
+
+      <div class="features">
+        <div class="feature-item">
+          <span class="feature-icon">🚚</span>
+          <span>Free delivery on orders $50+</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">↩️</span>
+          <span>30-day returns</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">✓</span>
+          <span>Authentic & handcrafted</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🔒</span>
+          <span>Secure payment</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Details Tabs -->
+  <div class="details-section">
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('description')">Description</button>
+      <button class="tab" onclick="showTab('specifications')">Specifications</button>
+      <button class="tab" id="reviews-tab" onclick="showTab('reviews')">
+        Reviews <span id="review-count">{{ product.comments.count }}</span>
+      </button>
+    </div>
+
+    <div id="description" class="tab-content active">
+      <div class="description-content">
+        {{product.description | safe}}
+      </div>
+    </div>
+
+    <div id="specifications" class="tab-content">
+      {{product.description | safe}}
+    </div>
+
+    <div id="reviews" class="tab-content">
+      <div class="reviews-summary">
+        <h3>4.8</h3> 
+        <div class="stars">★★★★★</div>
+        <p style="margin-top: 10px; color: #666;">Based on {{ product.comments.count }} review{{ product.comments.count|pluralize }}</p>
+      </div>
+
+      <!-- Comments List -->
+      <div class="comments-container">
+        {% if not product.comments.all %}
+          <div class="no-comments">
+            No comments yet. Be the first to share your thoughts!
+          </div>
+        {% else %}
+          {% for comment in product.comments.all %}
+          <div class="comment-item" data-comment-id="{{ comment.id }}">
+            <div class="comment-header">
+              <span class="comment-author">{{ comment.author.get_display_name }}</span>
+              <span class="comment-date">{{ comment.date_added|date:"M d, Y" }}</span>
+            </div>
+            <div class="comment-body">
+              {{ comment.body }}
+            </div>
+            
+            <!-- Action buttons -->
+            <div class="comment-actions">
+              <a href="#" class="comment-like-btn" data-comment-id="{{ comment.id }}">Like</a>
+              <a href="#" class="comment-reply-btn" data-comment-id="{{ comment.id }}">Reply</a>
+              
+              {% if user.is_authenticated and comment.author == user %}
+              <form method="post" action="{% url 'delete_comment' comment.id %}" class="delete-comment-form" data-comment-id="{{ comment.id }}">
+                {% csrf_token %}
+                <button type="submit" class="comment-delete-btn">Delete</button>
+              </form>
+              {% endif %}
+            </div>
+            
+            <!-- Toggle Replies Button -->
+            {% if comment.replies.count > 0 %}
+            <button class="toggle-replies-btn" data-comment-id="{{ comment.id }}">
+              <span class="arrow">→</span> Replies ({{ comment.replies.count }})
+            </button>
+            {% endif %}
+            
+            <!-- Replies Container (hidden by default) -->
+            <div class="replies-container" id="replies-{{ comment.id }}" style="display: none;">
+              {% for reply in comment.replies.all %}
+              <div class="reply-item" data-reply-id="{{ reply.id }}">
+                <div class="reply-header">
+                  <span class="reply-author">{{ reply.author.get_display_name }}</span>
+                  <span class="reply-date">{{ reply.date_added|date:"M d, Y" }}</span>
+                </div>
+                <div class="reply-body">
+                  {{ reply.body }}
+                </div>
+                
+                {% if user.is_authenticated and reply.author == user %}
+                <form method="post" action="{% url 'delete_reply' reply.id %}" class="delete-reply-form" data-reply-id="{{ reply.id }}">
+                  {% csrf_token %}
+                  <button type="submit" class="reply-delete-btn">Delete</button>
+                </form>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+            
+            <!-- Reply Form (hidden by default) -->
+            <div class="reply-form-container" id="reply-form-{{ comment.id }}" style="display: none;">
+              <form class="reply-form" data-comment-id="{{ comment.id }}" method="POST" action="{% url 'add_reply' comment.id %}">
+                {% csrf_token %}
+                <textarea class="reply-textarea" name="body" placeholder="Write your reply..." required></textarea>
+                <div class="reply-form-actions">
+                  <button type="submit" class="reply-submit-btn">Submit Reply</button>
+                  <button type="button" class="reply-cancel-btn" data-comment-id="{{ comment.id }}">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <!-- Add Comment Form -->
+      <div class="add-comment-section">
+        <h4>Leave a Comment</h4>
+        <form id="commentForm" method="POST" action="{% url 'add_comment' product.id %}">
+          {% csrf_token %}
+          {{ comment_form.as_p }}
+          <button type="submit" class="comment-submit-btn" id="submitCommentBtn">Submit Comment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).on('click', '#add-cart', function(e){
+    e.preventDefault();
+    
+    $.ajax({
+        type: 'POST',
+        url: '{% url "cart_add" %}',
+        data: {
+            product_id: $('#add-cart').val(),
+            quantity: $('#quantity').val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+        },
+        success: function(json){
+            
+            
+            // Find cart quantity element with multiple attempts
+            let cartElement = document.getElementById("cart_quantity") ||
+                            document.getElementById("cart-quantity") ||
+                            document.getElementById("cartQuantity") ||
+                            document.querySelector(".cart-quantity") ||
+                            document.querySelector(".cart-count") ||
+                            document.querySelector(".badge") ||
+                            document.querySelector("[data-cart-count]");
+            
+            if (cartElement) {
+                
+                cartElement.textContent = json.qty;
+                
+                // Visual feedback
+                cartElement.classList.add('updated');
+                setTimeout(() => cartElement.classList.remove('updated'), 500);
+            } else {
+                
+                alert('Item added to cart!');
+                location.reload();
+            }
+        },
+        error: function(xhr, errmsg, err){
+           
+            alert('Failed to add to cart. Please try again.');
+        }
+    });
+});
+</script>
+
+<script>
+const input = document.getElementById('quantity');
+input.addEventListener('input', function() {
+  const maxStock = parseInt(input.max);
+  if (parseInt(input.value) > maxStock) {
+    input.value = maxStock;
+  } else if (parseInt(input.value) < 1) {
+    input.value = 1;
+  }
+});
+</script>
+
+<script>
+const commentForm = document.getElementById('commentForm');
+
+if (commentForm) {
+    commentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const isAuthenticated = {{ user.is_authenticated|lower }};
+        
+        if (!isAuthenticated) {
+            Swal.fire({
+                title: "Login Required",
+                text: "You need to login to post a comment",
+                icon: "info",
+                confirmButtonText: "Go to Login",
+                confirmButtonColor: "#9cebd5"
+            }).then(() => {
+                window.location.href = "{% url 'login' %}?next={{ request.path }}";
+            });
+            return;
+        }
+        
+        const submitBtn = document.getElementById('submitCommentBtn');
+        const textarea = document.getElementById('id_body');
+        
+        if (!submitBtn || !textarea) {
+            console.error('Form elements not found');
+            return;
+        }
+        
+        // Disable button during submission
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+        
+        const formData = new FormData(this);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Clear the textarea
+                textarea.value = '';
+                
+                // Create new comment element
+                const newComment = document.createElement('div');
+                newComment.className = 'comment-item';
+                newComment.setAttribute('data-comment-id', data.comment_id);
+                newComment.style.animation = 'slideIn 0.3s ease';
+                newComment.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-author">${data.author_name}</span>
+                        <span class="comment-date">Just now</span>
+                    </div>
+                    <div class="comment-body">
+                        ${data.body}
+                    </div>
+                    <a href="#" class="comment-like-btn" data-comment-id="${data.comment_id}">
+                        <span class="like-icon">👍</span> 
+                        <span class="like-text">Like</span>
+                        
+                    </a>
+                    <form method="post" action="{% url 'delete_comment' 0 %}".replace('0', '${data.comment_id}') class="delete-comment-form" data-comment-id="${data.comment_id}">
+                        {% csrf_token %}
+                        <button type="submit" class="comment-delete-btn">Delete</button>
+                    </form>
+                `;
+                
+                // Insert at the top of comments
+                const commentsContainer = document.querySelector('.comments-container');
+                const noComments = document.querySelector('.no-comments');
+                
+                // Remove "no comments" message if it exists
+                if (noComments) {
+                    noComments.remove();
+                }
+                
+                // Insert new comment at the beginning
+                commentsContainer.insertBefore(newComment, commentsContainer.firstChild);
+                
+                // Update review count
+                const reviewCount = document.querySelectorAll('.comment-item').length;
+                const summaryText = document.querySelector('.reviews-summary p');
+                if (summaryText) {
+                    summaryText.textContent = `Based on ${reviewCount} review${reviewCount !== 1 ? 's' : ''}`;
+                }
+
+                // Update numbers on tab review
+                const reviewCountSpan = document.getElementById('review-count');
+                if (reviewCountSpan) {
+                    reviewCountSpan.textContent = reviewCount;
+                }
+                
+                // Show success message
+                Swal.fire({
+                  title: "Your comment has been submitted !",
+                  icon: "success",
+                  draggable: true
+                });
+                
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Comment';
+            } else {
+                alert(data.message || 'Failed to add comment. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Comment';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Something went wrong!"
+            });
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Comment';
+        });
+    });
+}
+</script>
+
+<script>
+  // Delete comment handler
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-comment-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const formData = new FormData(this);
+                    
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Remove the comment from DOM
+                            this.closest('.comment-item').remove();
+                            
+                            // Update review count
+                            const reviewCount = document.querySelectorAll('.comment-item').length;
+                            const summaryText = document.querySelector('.reviews-summary p');
+                            if (summaryText) {
+                                summaryText.textContent = `Based on ${reviewCount} review${reviewCount !== 1 ? 's' : ''}`;
+                            }
+
+                            const reviewCountSpan = document.getElementById('review-count');
+                            if (reviewCountSpan) {
+                                reviewCountSpan.textContent = reviewCount;
+                            }
+                            
+                            // Show if no comments left
+                            if (reviewCount === 0) {
+                                document.querySelector('.comments-container').innerHTML = '<div class="no-comments">No comments yet. Be the first to share your thoughts!</div>';
+                            }
+                            
+                            Swal.fire('Deleted!', 'Your comment has been deleted.', 'success');
+                        } else {
+                            Swal.fire('Error!', data.message || 'Failed to delete comment', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error!', 'Something went wrong!', 'error');
+                    });
+                }
+            });
+        });
+    });
+});
+</script>
+
+<script>
+  // Toggle Replies Visibility
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.toggle-replies-btn')) {
+        const btn = e.target.closest('.toggle-replies-btn');
+        const commentId = btn.dataset.commentId;
+        const repliesContainer = document.getElementById(`replies-${commentId}`);
+        const arrow = btn.querySelector('.arrow');
+        
+        if (repliesContainer.style.display === 'none') {
+            repliesContainer.style.display = 'block';
+            arrow.textContent = '↓';
+            btn.classList.add('active');
+        } else {
+            repliesContainer.style.display = 'none';
+            arrow.textContent = '→';
+            btn.classList.remove('active');
+        }
+    }
+});
+
+// Show Reply Form
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.comment-reply-btn')) {
+        e.preventDefault();
+        
+        const isAuthenticated = {{ user.is_authenticated|lower }};
+        
+        if (!isAuthenticated) {
+            Swal.fire({
+                title: "Login Required",
+                text: "You need to login to reply to comments",
+                icon: "info",
+                confirmButtonText: "Go to Login",
+                confirmButtonColor: "#9cebd5"
+            }).then(() => {
+                window.location.href = "{% url 'login' %}?next={{ request.path }}";
+            });
+            return;
+        }
+        
+        const btn = e.target.closest('.comment-reply-btn');
+        const commentId = btn.dataset.commentId;
+        const replyForm = document.getElementById(`reply-form-${commentId}`);
+        
+        // Hide all other reply forms
+        document.querySelectorAll('.reply-form-container').forEach(form => {
+            form.style.display = 'none';
+        });
+        
+        // Toggle current reply form
+        if (replyForm.style.display === 'none') {
+            replyForm.style.display = 'block';
+            replyForm.querySelector('textarea').focus();
+        } else {
+            replyForm.style.display = 'none';
+        }
+    }
+});
+
+// Cancel Reply
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.reply-cancel-btn')) {
+        const btn = e.target.closest('.reply-cancel-btn');
+        const commentId = btn.dataset.commentId;
+        const replyForm = document.getElementById(`reply-form-${commentId}`);
+        
+        replyForm.style.display = 'none';
+        replyForm.querySelector('textarea').value = '';
+    }
+});
+
+// Submit Reply
+document.addEventListener('submit', function(e) {
+    if (e.target.classList.contains('reply-form')) {
+        e.preventDefault();
+        
+        const form = e.target;
+        const commentId = form.dataset.commentId;
+        const textarea = form.querySelector('textarea');
+        const submitBtn = form.querySelector('.reply-submit-btn');
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+        
+        const formData = new FormData(form);
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Create new reply element
+                const newReply = document.createElement('div');
+                newReply.className = 'reply-item';
+                newReply.setAttribute('data-reply-id', data.reply_id);
+                newReply.innerHTML = `
+                    <div class="reply-header">
+                        <span class="reply-author">${data.author_name}</span>
+                        <span class="reply-date">Just now</span>
+                    </div>
+                    <div class="reply-body">
+                        ${data.body}
+                    </div>
+                    <form method="post" action="/delete-reply/${data.reply_id}/" class="delete-reply-form" data-reply-id="${data.reply_id}">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        <button type="submit" class="reply-delete-btn">Delete</button>
+                    </form>
+                `;
+                
+                // Get or create replies container
+                let repliesContainer = document.getElementById(`replies-${commentId}`);
+                
+                if (!repliesContainer) {
+                    // Create replies container if it doesn't exist
+                    const commentItem = document.querySelector(`.comment-item[data-comment-id="${commentId}"]`);
+                    const toggleBtn = document.createElement('button');
+                    toggleBtn.className = 'toggle-replies-btn active';
+                    toggleBtn.setAttribute('data-comment-id', commentId);
+                    toggleBtn.innerHTML = '<span class="arrow">↓</span> Replies (1)';
+                    
+                    repliesContainer = document.createElement('div');
+                    repliesContainer.className = 'replies-container';
+                    repliesContainer.id = `replies-${commentId}`;
+                    repliesContainer.style.display = 'block';
+                    
+                    const replyFormContainer = document.getElementById(`reply-form-${commentId}`);
+                    commentItem.insertBefore(toggleBtn, replyFormContainer);
+                    commentItem.insertBefore(repliesContainer, replyFormContainer);
+                } else {
+                    // Update existing toggle button count
+                    const toggleBtn = document.querySelector(`.toggle-replies-btn[data-comment-id="${commentId}"]`);
+                    const currentCount = repliesContainer.querySelectorAll('.reply-item').length + 1;
+                    toggleBtn.innerHTML = `<span class="arrow">↓</span> Replies (${currentCount})`;
+                    repliesContainer.style.display = 'block';
+                    toggleBtn.classList.add('active');
+                }
+                
+                // Add new reply to container
+                repliesContainer.appendChild(newReply);
+                
+                // Clear and hide form
+                textarea.value = '';
+                form.closest('.reply-form-container').style.display = 'none';
+                
+                Swal.fire({
+                    title: "Reply added!",
+                    icon: "success",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Reply';
+            } else {
+                Swal.fire('Error!', data.message || 'Failed to add reply', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Reply';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire('Error!', 'Something went wrong!', 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Reply';
+        });
+    }
+});
+
+// Delete Reply
+document.addEventListener('submit', function(e) {
+    if (e.target.classList.contains('delete-reply-form')) {
+        e.preventDefault();
+        
+        const form = e.target;
+        const replyId = form.dataset.replyId;
+        
+        Swal.fire({
+            title: 'Delete reply?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const formData = new FormData(form);
+                
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const replyItem = form.closest('.reply-item');
+                        const repliesContainer = form.closest('.replies-container');
+                        const commentId = repliesContainer.id.replace('replies-', '');
+                        
+                        replyItem.remove();
+                        
+                        // Update count or remove toggle button if no replies left
+                        const remainingReplies = repliesContainer.querySelectorAll('.reply-item').length;
+                        const toggleBtn = document.querySelector(`.toggle-replies-btn[data-comment-id="${commentId}"]`);
+                        
+                        if (remainingReplies === 0) {
+                            toggleBtn.remove();
+                            repliesContainer.remove();
+                        } else {
+                            toggleBtn.innerHTML = `<span class="arrow">↓</span> Replies (${remainingReplies})`;
+                        }
+                        
+                        Swal.fire('Deleted!', 'Reply has been deleted.', 'success');
+                    } else {
+                        Swal.fire('Error!', data.message || 'Failed to delete reply', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error!', 'Something went wrong!', 'error');
+                });
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

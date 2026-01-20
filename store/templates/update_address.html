@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Change Password{% endblock %}
+
+{% block extra_css %}
+<!-- Boxicons CSS for icons -->
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'css/update_user.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="account-overview-wrapper">
+    <div class="account-container">
+        <!-- Left Sidebar - Tabs -->
+        <aside class="account-sidebar">
+            <div class="sidebar-header">
+                <h3>
+                    <i class='bx bx-user-circle'></i>
+                    Account Settings
+                </h3>
+            </div>
+            <ul class="tab-list">
+                <li class="tab-item">
+                    <a href="{% url 'update_user' %}" class="tab-link">
+                        <i class='bx bx-user'></i>
+                        <span>Personal Information</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="{% url 'update_password' %}" class="tab-link active">
+                        <i class='bx bx-lock-alt'></i>
+                        <span>Change Password</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="{% url 'update_address' %}" class="tab-link" data-tab="address">
+                        <i class='bx bx-map'></i>
+                        <span>Address</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="#" class="tab-link" data-tab="notifications">
+                        <i class='bx bx-bell'></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="#" class="tab-link" data-tab="security">
+                        <i class='bx bx-shield'></i>
+                        <span>Security</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Right Content Area -->
+        <main class="account-content">
+            <div class="content-header">
+                <h2>Update Address</h2>
+                <p>Update Your Address To Deliver Your Products</p>
+            </div>
+
+            <form method="POST" action="{% url 'update_address' %}" novalidate>
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="form-group {% if field.errors %}has-error{% endif %}">
+                        <label class="field-label">{{ field.label }}</label>
+                        <div class="input-wrapper">
+                            {{ field }}
+                        </div>
+                        
+                        {% if field.errors %}
+                            <div class="error-message">
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
+                        
+                        {% if field.help_text %}
+                            <small class="help-text">{{ field.help_text|safe }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                {% if form.non_field_errors %}
+                    <div class="error-box">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <button type="submit" class="submit-btn">
+                    <span>Update Address</span>
+                </button>
+            </form>
+        </main>
+    </div>
+</div>
+{% endblock %}

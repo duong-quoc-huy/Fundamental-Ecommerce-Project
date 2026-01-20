@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Email</title>
+    <style type="text/css">
+        /* Embedded CSS for media queries (supported in most clients except some Outlook) */
+        body { margin: 0 !important; padding: 0 !important; }
+        table, td, tr { border-collapse: collapse; }
+        img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+        p { display: block; margin: 0; }
+
+        @media screen and (max-width: 600px) {
+            .container { width: 100% !important; padding: 20px !important; }
+            .header h1 { font-size: 28px !important; }
+            .main-content h2 { font-size: 22px !important; }
+            .button-td { width: 100% !important; display: block !important; }
+            .button a { padding: 18px 30px !important; font-size: 18px !important; }
+            .features-table { width: 100% !important; }
+            .feature-cell { width: 100% !important; display: block !important; padding: 20px 0 !important; text-align: center !important; }
+            .icon-div { width: 80px !important; height: 80px !important; font-size: 40px !important; }
+            .footer p { font-size: 13px !important; }
+            .social-td { padding: 10px 15px !important; }
+        }
+
+        /* Basic dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body { background-color: #1e1e1e !important; }
+            .main-table { background-color: #2d2d2d !important; }
+            .footer { background-color: #242424 !important; }
+            h1, h2, h3, p { color: #ffffff !important; }
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f4f4f4;">
+    <!-- Preheader text (hidden in display) -->
+    <div style="display: none; font-size: 1px; color: #f4f4f4; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+        Thank you for subscribing! We're excited to have you in our community.
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="center" style="padding: 40px 0;">
+                <table role="presentation" class="main-table" width="600" cellpadding="0" cellspacing="0" style="margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td align="center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 50px 30px;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold;">Welcome Aboard! 🎉</h1>
+                        </td>
+                    </tr>
+
+                    <!-- Main content -->
+                    <tr>
+                        <td class="container" style="padding: 40px 30px;">
+                            <h2 style="margin: 0 0 20px 0; color: #333333; font-size: 24px;">Hi {{ user_name }},</h2>
+                            <p style="margin: 0 0 20px 0; color: #666666; font-size: 16px; line-height: 1.7;">
+                                Thank you for subscribing to our newsletter! We're thrilled to have you as part of our community.
+                            </p>
+                            <p style="margin: 0 0 40px 0; color: #666666; font-size: 16px; line-height: 1.7;">
+                                Get ready to receive exciting updates, exclusive offers, and valuable content delivered straight to your inbox.
+                            </p>
+
+                            <!-- CTA Button -->
+                            <table role="presentation" align="center" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td class="button-td" align="center" style="border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                        <a href="https://firefly-ecommerce.duckdns.org/" target="_blank" style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 17px; border-radius: 8px;">
+                                            Visit Our Website
+                                        <h2></h2>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br>
+                            <table role="presentation" align="center" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td class="button-td" align="center" style="border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                        <a target="_blank" style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 17px; border-radius: 8px;">
+                                            Use this COUPON to receive 50% for the first time singup. More coupons are waiting for you ahead. COUPON: <br>WELCOMUSER
+                                        <h2></h2>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Features section -->
+                    <tr>
+                        <td style="padding: 20px 30px 50px;">
+                            <table role="presentation" class="features-table" width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td class="feature-cell" align="center" style="padding: 20px;">
+                                        <div class="icon-div" style="background-color: #667eea; color: white; width: 70px; height: 70px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 35px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>
+                                        </div>
+                                        <h3 style="margin: 0 0 12px 0; color: #333333; font-size: 18px;">Weekly Updates</h3>
+                                        <p style="margin: 0; color: #666666; font-size: 15px; line-height: 1.6;">Get the latest news every week</p>
+                                    </td>
+                                    <td class="feature-cell" align="center" style="padding: 20px;">
+                                        <div class="icon-div" style="background-color: #f093fb; color: white; width: 70px; height: 70px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 35px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" viewBox="0 0 512 512"><path d="M190.5 68.8L225.3 128H224 152c-22.1 0-40-17.9-40-40s17.9-40 40-40h2.2c14.9 0 28.8 7.9 36.3 20.8zM64 88c0 14.4 3.5 28 9.6 40H32c-17.7 0-32 14.3-32 32v64c0 17.7 14.3 32 32 32H480c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32H438.4c6.1-12 9.6-25.6 9.6-40c0-48.6-39.4-88-88-88h-2.2c-31.9 0-61.5 16.9-77.7 44.4L256 128 201.9 73.9C185.7 46.4 156.1 29.6 124.2 29.6h-2.2c-48.6 0-88 39.4-88 88zM464 242.7V320H48V242.7l159.1 63.6 64 25.6 64-25.6L464 242.7zM448 352V480c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V352H448z"/></svg>
+                                        </div>
+                                        <h3 style="margin: 0 0 12px 0; color: #333333; font-size: 18px;">Exclusive Offers</h3>
+                                        <p style="margin: 0; color: #666666; font-size: 15px; line-height: 1.6;">Special deals just for subscribers</p>
+                                    </td>
+                                    <td class="feature-cell" align="center" style="padding: 20px;">
+                                        <div class="icon-div" style="background-color: #4facfe; color: white; width: 70px; height: 70px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 35px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" viewBox="0 0 384 512"><path d="M272 384c9.6-31.9 29.5-59.1 49.2-86.2l0 0c5.2-7.1 10.4-14.2 15.4-21.4c19.8-28.5 31.4-63 31.4-100.3C368 78.8 289.2 0 192 0S16 78.8 16 176c0 37.3 11.6 71.9 31.4 100.3c5 7.2 10.2 14.3 15.4 21.4l0 0c19.8 27.1 39.7 54.4 49.2 86.2H272zM192 512c44.2 0 80-35.8 80-80V416H112v16c0 44.2 35.8 80 80 80zM112 176c0 0 0-17.7 27.5-32c7.2-3.7 15.1-5.5 23.5-5.5s16.4 1.8 23.5 5.5C214 158.3 212 176 212 176s0 17.7-27.5 32c-7.2 3.7-15.1 5.5-23.5 5.5s-16.4-1.8-23.5-5.5C130 193.7 112 176 112 176z"/></svg>
+                                        </div>
+                                        <h3 style="margin: 0 0 12px 0; color: #333333; font-size: 18px;">Expert Tips</h3>
+                                        <p style="margin: 0; color: #666666; font-size: 15px; line-height: 1.6;">Valuable insights and advice</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td class="footer" align="center" style="background-color: #f8f9fa; padding: 40px 30px; border-top: 1px solid #e9ecef;">
+                            <p style="margin: 0 0 15px 0; color: #666666; font-size: 14px;">Follow us on social media</p>
+                            <table role="presentation" align="center" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td class="social-td" style="padding: 0 15px;">
+                                        <a href="#" style="color: #667eea; text-decoration: none;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 512 512"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376.8 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125.6-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"/></svg>
+                                        </a>
+                                    </td>
+                                    <td class="social-td" style="padding: 0 15px;">
+                                        <a href="#" style="color: #667eea; text-decoration: none;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H348L217.7 284.6 65.5 464H-5.2L134.1 232.1 0 48h139.5L240.7 195.5 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+                                        </a>
+                                    </td>
+                                    <td class="social-td" style="padding: 0 15px;">
+                                        <a href="#" style="color: #667eea; text-decoration: none;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style="margin: 25px 0 0 0; color: #999999; font-size: 13px; line-height: 1.6;">
+                                © Firefly E-Commerce 2025. All rights reserved.<br>
+                                <a href="{{ unsubscribe_url }}" style="color: #667eea; text-decoration: none;">Unsubscribe</a> | 
+                                <a href="{{ preferences_url }}" style="color: #667eea; text-decoration: none;">Preferences</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

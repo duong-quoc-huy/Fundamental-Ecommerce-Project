@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Firefly E-Commerce Newsletter</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .header p {
+            color: #f0f0f0;
+            margin: 10px 0 0 0;
+            font-size: 16px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .content h2 {
+            color: #333333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .content p {
+            color: #666666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .benefits {
+            background-color: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .benefits h3 {
+            color: #333333;
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .benefits ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .benefits li {
+            color: #666666;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+        .cta-button {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .cta-button a {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .footer {
+            background-color: #333333;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .footer p {
+            color: #cccccc;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .social-icons {
+            margin: 20px 0;
+        }
+        .social-icons a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #cccccc;
+            font-size: 20px;
+            text-decoration: none;
+        }
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .content h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>🔥 Firefly E-Commerce</h1>
+            <p>Welcome to Our Newsletter Family!</p>
+        </div>
+
+        <div class="content">
+            <h2>Thank You for Subscribing! 🎉</h2>
+            <p>Hi there,</p>
+            <p>We're thrilled to have you join our community! You've just taken the first step towards staying updated with the latest trends, exclusive deals, and special offers from Firefly E-Commerce.</p>
+
+            <div class="benefits">
+                <h3>What You'll Receive:</h3>
+                <ul>
+                    <li>✨ Exclusive early access to new arrivals</li>
+                    <li>💰 Special subscriber-only discounts and promotions</li>
+                    <li>🎁 Birthday surprises and seasonal offers</li>
+                    <li>📰 Style tips and product recommendations</li>
+                    <li>🚀 First dibs on flash sales and limited editions</li>
+                </ul>
+            </div>
+
+            <p>We promise to keep your inbox interesting and never spam you. You can unsubscribe at any time if you change your mind.</p>
+
+            <div class="cta-button">
+                <a href="{{ shop_url }}">Start Shopping Now</a>
+            </div>
+
+            <p style="text-align: center; color: #999999; font-size: 14px;">
+                Follow us on social media to stay connected!
+            </p>
+        </div>
+
+        <div class="footer">
+            <div class="social-icons">
+                <a href="#" title="Facebook">📘</a>
+                <a href="#" title="Instagram">📷</a>
+                <a href="#" title="Twitter">🐦</a>
+                <a href="#" title="LinkedIn">💼</a>
+            </div>
+            <p><strong>Firefly E-Commerce</strong></p>
+            <p>3F Đ. Nguyễn Hữu Thọ, Tân Hưng, Quận 7</p>
+            <p>Thành phố Hồ Chí Minh</p>
+            <p>Phone: 1900 2309 | Email: firefly_cs@gmail.com</p>
+            <p style="margin-top: 20px;">
+                <a href="{{ unsubscribe_url }}">Unsubscribe</a> | 
+                <a href="{{ privacy_url }}">Privacy Policy</a>
+            </p>
+            <p style="color: #999999; font-size: 12px; margin-top: 15px;">
+                © 2025 Firefly E-Commerce. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

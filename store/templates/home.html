@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block extra_css %}
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+{% block content%}
+
+<div class="home-page">
+    <!-- Header Carousel -->
+    <header class="home-header">
+        <div class="home-carousel">
+            <!-- Slide 1 -->
+            <div class="home-carousel-slide home-slide-1 active" style="background-image: url('{% static "assets/slide1.jpg" %}');">
+                <div class="container px-4 px-lg-5">
+                    <div class="home-carousel-content text-center">
+                        <h1>Shop in Style</h1>
+                        <p>Discover our curated collection of premium products</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 2 -->
+            <div class="home-carousel-slide home-slide-2" style="background-image: url('{% static "assets/slide2.jpg" %}');">
+                <div class="container px-4 px-lg-5">
+                    <div class="home-carousel-content text-center">
+                        <h1>Exclusive Deals</h1>
+                        <p>Save big on your favorite items with our special offers</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 3 -->
+            <div class="home-carousel-slide home-slide-3" style="background-image: url('{% static "assets/slide3.jpg" %}');">
+                <div class="container px-4 px-lg-5">
+                    <div class="home-carousel-content text-center">
+                        <h1>New Arrivals</h1>
+                        <p>Check out the latest additions to our collection</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 4 -->
+            <div class="home-carousel-slide home-slide-4" style="background-image: url('{% static "assets/slide4.jpg" %}');">
+                <div class="container px-4 px-lg-5">
+                    <div class="home-carousel-content text-center">
+                        <h1>Quality Guaranteed</h1>
+                        <p>Premium products backed by our satisfaction guarantee</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation Dots -->
+            <div class="home-carousel-dots">
+                <span class="home-carousel-dot active" data-slide="0"></span>
+                <span class="home-carousel-dot" data-slide="1"></span>
+                <span class="home-carousel-dot" data-slide="2"></span>
+                <span class="home-carousel-dot" data-slide="3"></span>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.home-carousel-slide');
+            const dots = document.querySelectorAll('.home-carousel-dot');
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+            
+            function showSlide(index) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+                
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+            }
+            
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide);
+            }
+            
+            let autoSlide = setInterval(nextSlide, 5000);
+            
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', function() {
+                    currentSlide = index;
+                    showSlide(currentSlide);
+                    
+                    clearInterval(autoSlide);
+                    autoSlide = setInterval(nextSlide, 5000);
+                });
+            });
+        });
+    </script>
+
+    <!-- Products Section -->
+    <section class="home-section">
+        <div class="container px-4 px-lg-5">
+            <div class="section-header">
+                <h2>Featured Products</h2>
+                <p>Explore our handpicked selection of premium tech products</p>
+            </div>
+            
+            {% if products %}
+            <div class="home-product-grid">
+                {% for product in products %}
+                <div class="home-product-card">
+                    {% if product.is_sale %}
+                    <div class="home-sale-badge">
+                        <i class="bi bi-tag-fill"></i> SALE
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Product Image -->
+                    <div class="home-product-image-wrapper">
+                        {% with first_variant=product.variants.first %}
+                            {% if first_variant and first_variant.images.first %}
+                                <img class="home-product-image" src="{{ first_variant.images.first.image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                                <img class="home-product-image" src="{% static 'assets/no_image.jpg' %}" alt="No image available">
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                    
+                    <!-- Product Details -->
+                    <div class="home-product-body">
+                        <h5 class="home-product-title">{{ product.name }}</h5>
+                        
+                        <div class="home-product-price-wrapper">
+                            {% if product.is_sale %}
+                                <span class="home-product-price-original">${{ product.price }}</span>
+                                <span class="home-product-price-sale">${{ product.sale_price }}</span>
+                            {% else %}
+                                <span class="home-product-price-regular">${{ product.price }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Stock Status -->
+                        {% if product.stock > 10 %}
+                        <div class="stock-status in-stock">
+                            <i class="bi bi-circle-fill"></i> In Stock
+                        </div>
+                        {% elif product.stock > 0 %}
+                        <div class="stock-status low-stock">
+                            <i class="bi bi-circle-fill"></i> Low Stock
+                        </div>
+                        {% else %}
+                        <div class="stock-status out-of-stock">
+                            <i class="bi bi-circle-fill"></i> Out of Stock
+                        </div>
+                        {% endif %}
+                        
+                        <div class="home-product-category">
+                            <i class="bi bi-tag"></i>
+                            {{ product.category }}
+                        </div>
+                    </div>
+                    
+                    <!-- Product Actions -->
+                    <div class="home-product-footer">
+                        <a class="home-view-btn" href="{% url 'product' product.slug %}">
+                            View Details
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <h3>No Products Available</h3>
+                <p>Check back soon for new arrivals!</p>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}

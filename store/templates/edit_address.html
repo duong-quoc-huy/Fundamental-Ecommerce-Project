@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Address{% endblock %}
+
+{% block extra_css %}
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'css/update_user.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="account-overview-wrapper">
+    <div class="account-container">
+        <!-- Left Sidebar - Tabs -->
+        <aside class="account-sidebar">
+            <div class="sidebar-header">
+                <h3>
+                    <i class='bx bx-user-circle'></i>
+                    Account Settings
+                </h3>
+            </div>
+            <ul class="tab-list">
+                <li class="tab-item">
+                    <a href="{% url 'update_user' %}" class="tab-link">
+                        <i class='bx bx-user'></i>
+                        <span>Personal Information</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="{% url 'update_password' %}" class="tab-link">
+                        <i class='bx bx-lock-alt'></i>
+                        <span>Change Password</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="{% url 'update_address' %}" class="tab-link active">
+                        <i class='bx bx-map'></i>
+                        <span>My Addresses</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="#" class="tab-link" data-tab="notifications">
+                        <i class='bx bx-bell'></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="#" class="tab-link" data-tab="security">
+                        <i class='bx bx-shield'></i>
+                        <span>Security</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Right Content Area -->
+        <main class="account-content">
+            <div class="content-header">
+                <h2>Edit Address</h2>
+                <p>Update your shipping address</p>
+            </div>
+
+            <form method="POST" action="{% url 'edit_address' address.id %}" novalidate>
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="form-group {% if field.errors %}has-error{% endif %}">
+                        <label class="field-label">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                                <span style="color: red;">*</span>
+                            {% endif %}
+                        </label>
+                        <div class="input-wrapper">
+                            {{ field }}
+                        </div>
+                        
+                        {% if field.errors %}
+                            <div class="error-message">
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
+                        
+                        {% if field.help_text %}
+                            <small class="help-text">{{ field.help_text|safe }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                {% if form.non_field_errors %}
+                    <div class="error-box">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="submit-btn">
+                        <span>Update Address</span>
+                    </button>
+                    <a href="{% url 'update_address' %}" class="submit-btn" style="background: #6c757d; text-align: center; line-height: 45px;">
+                        <span>Cancel</span>
+                    </a>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+{% endblock %}

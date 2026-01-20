@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Account Overview{% endblock %}
+
+{% block extra_css %}
+<!-- Boxicons CSS for icons -->
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'css/update_user.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="account-overview-wrapper">
+    <div class="account-container">
+        <!-- Left Sidebar - Tabs -->
+        <aside class="account-sidebar">
+            <div class="sidebar-header">
+                <h3>
+                    <i class='bx bx-user-circle'></i>
+                    Account Settings
+                </h3>
+            </div>
+            <ul class="tab-list">
+                <li class="tab-item">
+                    <a href="{% url 'update_user' %}" class="tab-link active" data-tab="personal-info">
+                        <i class='bx bx-user'></i>
+                        <span>Personal Information</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="{% url 'update_password' %}" class="tab-link" data-tab="change-password">
+                        <i class='bx bx-lock-alt'></i>
+                        <span>Change Password</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="{% url 'update_address' %}" class="tab-link" data-tab="address">
+                        <i class='bx bx-map'></i>
+                        <span>Address</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="#" class="tab-link" data-tab="notifications">
+                        <i class='bx bx-bell'></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+                <li class="tab-item">
+                    <a href="#" class="tab-link" data-tab="security">
+                        <i class='bx bx-shield'></i>
+                        <span>Security</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Right Content Area -->
+        <main class="account-content">
+            <!-- Personal Information Tab Content -->
+            <div class="content-header">
+                <h2>Personal Information</h2>
+                <p>Update your personal details and information</p>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" novalidate id="updateUserForm">
+                {% csrf_token %}
+
+                {% if user_form.errors %}
+                    <div class="alert alert-danger">
+                        <strong>Please correct the following errors:</strong>
+                        <ul>
+                            {% for field, errors in user_form.errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ field }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <!-- Profile Image Upload Section -->
+                <div class="form-group image-upload-section">
+                    <label class="field-label">Profile Picture</label>
+                    
+                    <div class="image-preview-container">
+                        {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" alt="Profile" class="profile-preview" id="imagePreview">
+                        {% else %}
+                            <div class="profile-preview-placeholder" id="imagePreview">
+                                <i class='bx bx-user-circle'></i>
+                                <span>No image uploaded</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-wrapper">
+                        {{ user_form.profile_image }}
+                    </div>
+                    
+                   {% if user_form.profile_image.errors %}
+                        <div class="alert alert-danger">
+                            {{ user_form.profile_image.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% for field in user_form %}
+                    {% if field.name != 'profile_image' and field.name != 'phone_number'  %}
+                        <div class="form-group {% if field.errors %}has-error{% endif %}">
+                            {% if field.name == 'gender' %}
+                                <!-- Gender Radio Buttons -->
+                                <label class="field-label">{{ field.label }}</label>
+                                <div class="radio-group">
+                                    {% for choice in field %}
+                                        <label class="radio-label">
+                                            {{ choice.tag }}
+                                            <span>{{ choice.choice_label }}</span>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <!-- Regular Input Fields -->
+                                <div class="input-wrapper">
+                                    {{ field }}
+                                </div>
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                <div class="error-message">
+                                    {{ field.errors|striptags }}
+                                </div>
+                            {% endif %}
+                            
+                            {% if field.help_text %}
+                                <small class="help-text">{{ field.help_text|safe }}</small>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                {% if user_phone %}
+                    <!-- Show phone number as read-only -->
+                    <div class="form-group phone-number-section">
+                        <label class="field-label">Mobile Number</label>
+                        <div class="phone-number-display">
+                            <span>{{ user_phone }}</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- CHANGE THIS: Remove href to captcha_check -->
+                    <div class="form-group phone-number-section">
+                        <label class="field-label">Mobile Number</label>
+                        <div class="phone-number-display">
+                            <span class="phone-placeholder">-</span>
+                            
+                            <button type="button" class="link-phone" id="open_popup">Link Phone Number</button>
+                        </div>
+                    </div>
+                {% endif %}
+                <button type="submit" class="submit-btn">
+                    <span>Update Profile</span>
+                </button>
+            </form>
+            {% include 'add_phone_number.html' %}
+        </main>
+    </div>
+</div>
+<script>
+    // Live image preview
+    const fileInput = document.querySelector('input[type="file"]');
+    const imagePreview = document.getElementById('imagePreview');
+    
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (imagePreview.tagName === 'IMG') {
+                        imagePreview.src = e.target.result;
+                    } else {
+                        // Replace placeholder with actual image
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'profile-preview';
+                        img.id = 'imagePreview';
+                        imagePreview.parentNode.replaceChild(img, imagePreview);
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+</script>
+<script>
+// Simple modal opener - guaranteed to work
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const openBtn = document.getElementById('open_popup');
+    const modal = document.getElementById('modal_overlay');
+    const closeBtn = document.getElementById('close_popup');
+    const phoneInput = document.getElementById('phone_input');
+    
+    // Open modal
+    openBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        modal.classList.add('show');
+        // Initialize reCAPTCHA when modal opens
+        setTimeout(() => {
+            if (typeof initializeRecaptcha === 'function') {
+                initializeRecaptcha();
+            }
+            if (phoneInput) {
+                phoneInput.focus();
+            }
+        }, 400);
+    });
+    
+    // Close modal on X button
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            console.log('🖱️ Close button clicked');
+            modal.classList.remove('show');
+        });
+    }
+    
+    // Close on overlay click
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            
+            modal.classList.remove('show');
+        }
+    });
+    
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+            
+            modal.classList.remove('show');
+        }
+    });
+    
+    
+});
+</script>
+{% endblock %}

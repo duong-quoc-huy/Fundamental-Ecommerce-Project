@@ -1,0 +1,86 @@
+{% load socialaccount %}
+{% load static %}
+
+<title> Connecting to {{ provider.name }} </title>
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/login_via_other_method.css' %}">
+    {% endblock %}
+</head>
+<body class="sl-page-body">
+<div class="sl-page">
+<div class="sl-social-login-container">
+    <div class="sl-logo-section">
+        <i class="fas fa-rocket"></i>
+        <h1>Continue to Firefly</h1>
+        <p>Sign in securely with your social account</p>
+    </div>
+
+    <!-- The form that submits the login -->
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="sl-provider-info">
+            <div class="sl-provider-icon {{ provider.id }}">
+                {% if provider.id == 'google' %}
+                    <i class="fab fa-google"></i>
+                {% elif provider.id == 'facebook' %}
+                    <i class="fab fa-facebook-f"></i>
+                {% endif %}
+            </div>
+            
+            <i class="fas fa-arrow-right sl-provider-arrow"></i>
+            
+            <div class="sl-provider-text">
+                <h3>{{ provider.name }}</h3>
+                <p>You'll be redirected to {{ provider.name }}</p>
+            </div>
+        </div>
+
+        <button type="submit" class="sl-continue-btn">
+            <i class="fas fa-sign-in-alt"></i>
+            Continue with {{ provider.name }}
+        </button>
+        
+        <a href="{% url 'login' %}" class="sl-cancel-btn">
+            <i class="fas fa-times"></i> Cancel
+        </a>
+
+        <div class="sl-permissions-info">
+            <h4>
+                <i class="fas fa-info-circle"></i>
+                What we'll access:
+            </h4>
+            <ul>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    Your email address
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    Your name and profile picture
+                </li>
+                <li>
+                    <i class="fas fa-check-circle"></i>
+                    Basic profile information
+                </li>
+            </ul>
+        </div>
+
+        <div class="sl-security-badge">
+            <i class="fas fa-shield-alt"></i>
+            <span>Secured with OAuth 2.0 encryption</span>
+        </div>
+    </form>
+</div>
+</div>
+</body>
+</html>
+
+{% endblock %}

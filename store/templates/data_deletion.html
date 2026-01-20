@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+
+{% block title %}Data Deletion Instructions{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .dd-page * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .dd-page-body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .dd-deletion-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .dd-deletion-container h1 {
+            color: #c0392b;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 3px solid #e74c3c;
+            padding-bottom: 15px;
+        }
+
+        .dd-deletion-container h2 {
+            color: #e74c3c;
+            font-size: 1.8rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .dd-deletion-container h3 {
+            color: #c0392b;
+            font-size: 1.4rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .dd-deletion-container h4 {
+            color: #922b21;
+            font-size: 1.2rem;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+
+        .dd-deletion-container p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .dd-last-updated {
+            text-align: center;
+            font-style: italic;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .dd-deletion-container ul,
+        .dd-deletion-container ol {
+            margin-bottom: 20px;
+            padding-left: 30px;
+        }
+
+        .dd-deletion-container li {
+            margin-bottom: 12px;
+        }
+
+        .dd-deletion-container li p {
+            margin-bottom: 8px;
+        }
+
+        .dd-deletion-container strong {
+            color: #c0392b;
+            font-weight: 600;
+        }
+
+        .dd-deletion-container a {
+            color: #e74c3c;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .dd-deletion-container a:hover {
+            color: #c0392b;
+            text-decoration: underline;
+        }
+
+        .dd-warning-box {
+            background-color: #fadbd8;
+            border: 2px solid #e74c3c;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .dd-warning-box h3 {
+            margin-top: 0;
+            color: #c0392b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dd-warning-box h3 i {
+            font-size: 1.5rem;
+        }
+
+        .dd-contact-section {
+            background-color: #fadbd8;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 30px;
+            border: 1px solid #e74c3c;
+        }
+
+        .dd-contact-section h2 {
+            margin-top: 0;
+            border-left: none;
+            padding-left: 0;
+        }
+
+        .dd-steps-box {
+            background-color: #fff5f5;
+            border: 1px solid #f5b7b1;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .dd-section-divider {
+            height: 2px;
+            background: linear-gradient(to right, #e74c3c, #fadbd8, #e74c3c);
+            margin: 40px 0;
+            border: none;
+        }
+
+        .dd-info-card {
+            background-color: #fff5f5;
+            border-left: 4px solid #e74c3c;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .dd-info-card strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #c0392b;
+        }
+
+        @media (max-width: 768px) {
+            .dd-deletion-container {
+                margin: 10px;
+                padding: 20px 15px;
+            }
+
+            .dd-deletion-container h1 {
+                font-size: 2rem;
+            }
+
+            .dd-deletion-container h2 {
+                font-size: 1.5rem;
+            }
+
+            .dd-deletion-container h3 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body class="dd-page-body">
+<div class="dd-page">
+<div class="dd-deletion-container">
+    <h1><i class="fas fa-user-slash"></i> Data Deletion Instructions</h1>
+    <p class="dd-last-updated">Last updated: December 21, 2024</p>
+
+    <div class="dd-warning-box">
+        <h3><i class="fas fa-exclamation-triangle"></i> Important Notice</h3>
+        <p>Deleting your account is a <strong>permanent action</strong> and cannot be undone. All your data, including your profile information, purchase history, and preferences will be permanently removed from our systems.</p>
+    </div>
+
+    <hr class="dd-section-divider">
+
+    <h2><i class="fas fa-list-ol"></i> How to Delete Your Account and Data</h2>
+    <p>If you wish to delete your account and all associated data, please follow these steps:</p>
+    
+    <div class="dd-steps-box">
+        <ol>
+            <li><strong>Log in</strong> to your account at <a href="https://firefly-ecommerce.duckdns.org">firefly-ecommerce.duckdns.org</a></li>
+            <li>Navigate to your <strong>Account Settings</strong> or <strong>Profile</strong> page</li>
+            <li>Scroll down to the <strong>"Account Management"</strong> section</li>
+            <li>Click on <strong>"Delete Account"</strong> or <strong>"Delete My Data"</strong> button</li>
+            <li>Read the warning message carefully</li>
+            <li>Confirm the deletion by entering your password</li>
+            <li>Click <strong>"Permanently Delete My Account"</strong> to finalize</li>
+        </ol>
+    </div>
+
+    <hr class="dd-section-divider">
+
+    <h2><i class="fas fa-envelope"></i> Alternative Method</h2>
+    <p>If you're unable to access your account or prefer manual assistance, you can request data deletion by contacting us directly:</p>
+    
+    <div class="dd-info-card">
+        <strong><i class="fas fa-paper-plane"></i> Email:</strong> 
+        <p><a href="mailto:support@firefly-ecommerce.com">support@firefly-ecommerce.com</a></p>
+    </div>
+
+    <div class="dd-info-card">
+        <strong><i class="fas fa-tag"></i> Subject Line:</strong> 
+        <p>Data Deletion Request - [Your Email Address]</p>
+    </div>
+
+    <div class="dd-info-card">
+        <strong><i class="fas fa-info-circle"></i> Required Information:</strong>
+        <p>Please include the following in your request:</p>
+        <ul>
+            <li>Your registered email address</li>
+            <li>Your full name (as registered)</li>
+            <li>Reason for deletion (optional)</li>
+            <li>Confirmation that you understand this action is permanent</li>
+        </ul>
+    </div>
+
+    <hr class="dd-section-divider">
+
+    <h2><i class="fas fa-trash-alt"></i> What Gets Deleted</h2>
+    <p>When you delete your account, we will permanently remove the following information:</p>
+    
+    <div class="dd-steps-box">
+        <ul>
+            <li><i class="fas fa-user"></i> Your profile information (name, username, bio)</li>
+            <li><i class="fas fa-envelope"></i> Your email address and contact details</li>
+            <li><i class="fas fa-phone"></i> Your phone number</li>
+            <li><i class="fas fa-image"></i> Your profile picture and uploaded images</li>
+            <li><i class="fas fa-shopping-cart"></i> Your order history and preferences</li>
+            <li><i class="fas fa-heart"></i> Your saved items and wishlists</li>
+            <li><i class="fas fa-comments"></i> Your reviews and comments</li>
+            <li><i class="fas fa-link"></i> Connected social media accounts (Google, Facebook)</li>
+            <li><i class="fas fa-database"></i> Any other data associated with your account</li>
+        </ul>
+    </div>
+
+    <hr class="dd-section-divider">
+
+    <h2><i class="fas fa-shield-alt"></i> What We May Retain</h2>
+    <p>For legal and security purposes, we may retain certain information:</p>
+    
+    <div class="dd-info-card">
+        <ul>
+            <li>Transaction records (required for tax and accounting purposes for 7 years)</li>
+            <li>Records of refunds or disputes (required by law)</li>
+            <li>Information necessary to prevent fraud or abuse</li>
+            <li>Anonymous analytics data that cannot identify you</li>
+        </ul>
+        <p><strong>Note:</strong> All retained data is kept in accordance with applicable privacy laws and regulations.</p>
+    </div>
+
+    <hr class="dd-section-divider">
+
+    <h2><i class="fas fa-clock"></i> Processing Time</h2>
+    <p>Data deletion requests are typically processed within the following timeframes:</p>
+    
+    <div class="dd-steps-box">
+        <ul>
+            <li><strong>Self-service deletion:</strong> Immediate (within 24 hours)</li>
+            <li><strong>Email requests:</strong> Within 7-14 business days</li>
+            <li><strong>Complete data removal:</strong> Within 30 days maximum</li>
+        </ul>
+    </div>
+
+    <p>You will receive a confirmation email once your data has been successfully deleted.</p>
+
+    <hr class="dd-section-divider">
+
+    <h2><i class="fas fa-undo"></i> Before You Delete</h2>
+    <p>Please consider these alternatives before permanently deleting your account:</p>
+    
+    <div class="dd-info-card">
+        <ul>
+            <li><strong>Deactivate temporarily:</strong> Hide your account without losing your data</li>
+            <li><strong>Update privacy settings:</strong> Control what information is visible</li>
+            <li><strong>Unsubscribe from emails:</strong> Stop receiving newsletters without deleting your account</li>
+            <li><strong>Download your data:</strong> Export a copy of your data before deletion</li>
+        </ul>
+    </div>
+
+    <div class="dd-contact-section">
+        <h2><i class="fas fa-question-circle"></i> Contact Us</h2>
+        <p>If you have any questions about data deletion or this policy, please contact us:</p>
+        <ul>
+            <li><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:support@firefly-ecommerce.com">support@firefly-ecommerce.com</a></li>
+            <li><i class="fas fa-globe"></i> <strong>Website:</strong> <a href="https://firefly-ecommerce.duckdns.org">firefly-ecommerce.duckdns.org</a></li>
+        </ul>
+        <p style="margin-top: 20px;"><strong>Privacy Policy:</strong> For more information about how we handle your data, please read our <a href="/privacy_policy/">Privacy Policy</a>.</p>
+    </div>
+</div>
+</div>
+</body>
+</html>
+
+{% endblock %}

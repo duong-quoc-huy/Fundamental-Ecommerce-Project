@@ -1,0 +1,269 @@
+/* Navbar Enhancement Styles */
+.navbar {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #1D4ED8 !important;
+    transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+    color: #2563EB !important;
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #1D4ED8;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 80%;
+}
+
+/* Enhanced Dropdown Menu */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    padding: 0.5rem 0;
+    min-width: 250px;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+}
+
+.dropdown-item i {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.dropdown-item:hover {
+    background: #eff6ff;
+    color: #1e40af;
+    padding-left: 2rem;
+}
+
+.dropdown-divider {
+    margin: 0.5rem 0;
+    border-color: #e5e7eb;
+}
+
+/* Category Icons */
+.category-icon {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: #1D4ED8;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+/* Search Bar Enhancement */
+.search-form {
+    position: relative;
+}
+
+.search-form .form-control {
+    border-radius: 25px;
+    padding: 0.5rem 1.25rem;
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+.search-form .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-form .btn {
+    border-radius: 25px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+}
+
+/* Cart Button Enhancement */
+.btn-outline-dark {
+    border-radius: 25px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid #3b82f6;
+    color: #3b82f6;
+    background-color: transparent;
+}
+
+.btn-outline-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    background: #0d6efd;
+    color: #ffffff;
+    border-color: #0d6efd;
+}
+
+.cart-badge {
+    background: #0d6efd;
+}
+
+/* User Dropdown Styles */
+.user-dropdown {
+    position: relative;
+    margin-left: 1rem;
+}
+
+.user-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.user-icon-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.user-icon-btn i {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.user-icon-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Fix for authenticated users without profile image */
+.user-icon-btn.authenticated {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-color: #3b82f6;
+}
+
+/* Only apply white background when there's an actual image */
+.user-icon-btn.authenticated.has-image {
+    background: white;
+}
+
+.user-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.user-dropdown:hover .user-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-dropdown-header {
+    padding: 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.user-dropdown-header i {
+    font-size: 3rem;
+    color: #667eea;
+    margin-bottom: 0.5rem;
+}
+
+.user-dropdown-header p {
+    margin: 0;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.user-dropdown-body {
+    padding: 0.5rem 0;
+}
+
+.dropdown-item-custom {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    color: #2d3748;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.dropdown-item-custom:hover {
+    background: #eff6ff;
+    color: #1e40af;
+}
+
+.dropdown-item-custom i {
+    font-size: 1.1rem;
+    width: 20px;
+}
+
+.dropdown-divider-custom {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 0.5rem 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 991px) {
+    .search-form {
+        margin-top: 1rem;
+        width: 100%;
+    }
+    
+    .search-form .form-control {
+        width: 100%;
+    }
+    
+    .user-dropdown {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+}

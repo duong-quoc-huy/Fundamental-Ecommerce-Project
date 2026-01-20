@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ category }} - Categories{% endblock %}
+
+{% block extra_css %}
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'css/category.css' %}">
+{% endblock %}
+
+{% block content%}
+<div class="category-page">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-wrapper">
+        <div class="container px-4 px-lg-5">
+            <ul class="custom-breadcrumb">
+                <li><a href="{% url 'home' %}"><i class="bi bi-house-door"></i> Home</a></li>
+                <li><i class="bi bi-chevron-right"></i></li>
+                <li><a href="{% url 'home' %}">Categories</a></li>
+                <li><i class="bi bi-chevron-right"></i></li>
+                <li class="active">{{ category }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Category Header -->
+    <header class="category-header">
+        <div class="container px-4 px-lg-5">
+            <div class="category-header-content text-center text-white">
+                <div class="category-icon">
+                    {% if category == "Phone" %}
+                        <i class="bi bi-phone"></i>
+                    {% elif category == "Laptop" %}
+                        <i class="bi bi-laptop"></i>
+                    {% elif category == "Tablet" %}
+                        <i class="bi bi-tablet"></i>
+                    {% elif category == "Earphone" %}
+                        <i class="bi bi-earbuds"></i>
+                    {% elif category == "Headphone" %}
+                        <i class="bi bi-headphones"></i>
+                    {% elif category == "iPad" %}
+                        <i class="bi bi-tablet-landscape"></i>
+                    {% else %}
+                        <i class="bi bi-grid"></i>
+                    {% endif %}
+                </div>
+                <h1>{{ category }}</h1>
+                <p>Explore our collection of premium {{ category|lower }} products</p>
+                <div class="product-count">
+                    <i class="bi bi-box-seam"></i> {{ products|length }} Product{% if products|length != 1 %}s{% endif %} Available
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Products Section -->
+    <section class="category-section">
+        <div class="container px-4 px-lg-5">
+            {% if products %}
+            <div class="category-product-grid">
+                {% for product in products %}
+                <div class="category-product-card">
+                    {% if product.is_sale %}
+                    <div class="category-sale-badge">
+                        <i class="bi bi-tag-fill"></i> SALE
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Product Image -->
+                    <div class="category-product-image-wrapper">
+                        {% with first_variant=product.variants.first %}
+                            {% if first_variant and first_variant.images.first %}
+                                <img class="category-product-image" src="{{ first_variant.images.first.image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                                <img class="category-product-image" src="{% static 'assets/no_image.jpg' %}" alt="No image available">
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                    
+                    <!-- Product Details -->
+                    <div class="category-product-body">
+                        <h5 class="category-product-title">{{ product.name }}</h5>
+                        
+                        <div class="category-product-price-wrapper">
+                            {% if product.is_sale %}
+                                <span class="category-product-price-original">${{ product.price }}</span>
+                                <span class="category-product-price-sale">${{ product.sale_price }}</span>
+                            {% else %}
+                                <span class="category-product-price-regular">${{ product.price }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Stock Status -->
+                        {% if product.stock > 10 %}
+                        <div class="stock-status in-stock">
+                            <i class="bi bi-circle-fill"></i> In Stock
+                        </div>
+                        {% elif product.stock > 0 %}
+                        <div class="stock-status low-stock">
+                            <i class="bi bi-circle-fill"></i> Low Stock
+                        </div>
+                        {% else %}
+                        <div class="stock-status out-of-stock">
+                            <i class="bi bi-circle-fill"></i> Out of Stock
+                        </div>
+                        {% endif %}
+                        
+                        <div class="category-product-category">
+                            <i class="bi bi-tag"></i>
+                            {{ product.category }}
+                        </div>
+                    </div>
+                    
+                    <!-- Product Actions -->
+                    <div class="category-product-footer">
+                        <a class="category-view-btn" href="{% url 'product' product.slug %}">
+                            View Details
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <h3>No Products Found</h3>
+                <p>We couldn't find any products in this category at the moment.</p>
+                <a href="{% url 'home' %}" class="empty-state-btn">
+                    <i class="bi bi-arrow-left"></i> Browse All Products
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+
+{% endblock %}

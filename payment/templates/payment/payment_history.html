@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Payment History{% endblock %}
+{% load static %}
+
+{% block extra_css %}
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'css/payment_history.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="payment-history-container">
+        <div class="payment-history-header">
+            <h1><i class="fa fa-credit-card"></i> Payment History</h1>
+            <p>Track all your orders and transactions</p>
+        </div>
+
+        {% if orders %}
+            {% for order in orders %}
+            <div class="payment-history-order-card">
+                <div class="payment-history-order-header">
+                    <div class="payment-history-order-number">Order #{{ order.order_number }}</div>
+                    <span class="payment-history-status-badge payment-history-status-{{ order.status }}">{{ order.get_status_display }}</span>
+                </div>
+
+                <div class="payment-history-order-details">
+                    <div class="payment-history-detail-item">
+                        <span class="payment-history-detail-label">Order Date</span>
+                        <span class="payment-history-detail-value">{{ order.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    
+                    {% if order.paid_at %}
+                    <div class="payment-history-detail-item">
+                        <span class="payment-history-detail-label">Paid Date</span>
+                        <span class="payment-history-detail-value">{{ order.paid_at|date:"M d, Y" }}</span>
+                    </div>
+                    {% endif %}
+
+                    <div class="payment-history-detail-item">
+                        <span class="payment-history-detail-label">Shipping To</span>
+                        <span class="payment-history-detail-value">{{ order.shipping_address.shipping_city }}, {{ order.shipping_address.shipping_country }}</span>
+                    </div>
+
+                    {% if order.vnpay_transaction_no %}
+                    <div class="payment-history-detail-item">
+                        <span class="payment-history-detail-label">Transaction ID</span>
+                        <span class="payment-history-detail-value">{{ order.payment_transaction_no }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if order.payment_method %}
+                    <div class="payment-history-detail-item">
+                        <span class="payment-history-detail-label">Banking Method</span>
+                        <span class="payment-history-detail-value">{{ order.payment_method }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="payment-history-order-items">
+                    <h3>Order Items</h3>
+                    {% for item in order.items.all %}
+                    <div class="payment-history-item">
+                        <div>
+                            <div class="payment-history-item-name">{{ item.product.name }}</div>
+                            <div class="payment-history-item-quantity">Quantity: {{ item.quantity }}</div>
+                        </div>
+                        <div class="payment-history-detail-value">${{ item.price }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="payment-history-order-total">
+                    <span class="payment-history-total-label">Total Amount</span>
+                    <span class="payment-history-total-value">${{ order.total }}</span>
+                </div>
+            </div>
+            {% endfor %}
+
+        {% else %}
+            <div class="payment-history-empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <h2>No Orders Yet</h2>
+                <p>You haven't made any purchases yet. Start shopping to see your order history here!</p>
+                <a href="/" class="payment-history-btn">Start Shopping</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - Frequently Asked Questions{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Bootstrap CSS (assuming it's used based on classes like container, row, etc.) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+	    .faq-header {
+	        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	        color: white;
+	        padding: 60px 0;
+	        margin-bottom: 40px;
+	        text-align: center;
+	    }
+
+	    .faq-section {
+	        background: #f8f9fa;
+	        padding: 30px;
+	        border-radius: 15px;
+	        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+	        margin-bottom: 40px;
+	    }
+
+	    .faq-list {
+	        list-style: none;
+	        padding: 0;
+	        margin: 0;
+	    }
+
+	    .faq-item {
+	        background: white;
+	        margin-bottom: 20px;
+	        border-radius: 10px;
+	        overflow: hidden;
+	        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+	        transition: all 0.3s ease;
+	    }
+
+        .faq-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+	    .faq-question {
+	        font-weight: bold;
+	        color: #2c3e50;
+	        margin: 0;
+	        padding: 20px;
+	        background: #ffffff;
+	        border-bottom: 1px solid #e9ecef;
+	        font-size: 1.1rem;
+	    }
+
+	        .faq-question i {
+	            color: #667eea;
+	            margin-right: 10px;
+	        }
+
+	    .faq-answer {
+	        color: #6c757d;
+	        line-height: 1.6;
+	        margin: 0;
+	        padding: 20px;
+	        background: #fdfdfd;
+	    }
+
+	    .back-link {
+	        display: inline-block;
+	        background: #667eea;
+	        color: white;
+	        text-decoration: none;
+	        padding: 12px 25px;
+	        border-radius: 10px;
+	        transition: all 0.3s ease;
+	        font-weight: 500;
+	        margin-top: 20px;
+	    }
+
+	        .back-link:hover {
+	            background: #764ba2;
+	            color: white;
+	            transform: translateY(-2px);
+	            text-decoration: none;
+	        }
+
+	        .back-link i {
+	            margin-right: 8px;
+	        }
+
+	    .faq-info {
+	        background: white;
+	        padding: 25px;
+	        border-radius: 15px;
+	        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+	    }
+
+	    .faq-info-item {
+	        display: flex;
+	        align-items: flex-start;
+	        margin-bottom: 15px;
+	        padding: 10px 0;
+	    }
+
+        .faq-info-item i {
+            font-size: 1.2rem;
+            color: #667eea;
+            margin-right: 15px;
+            margin-top: 2px;
+        }
+
+        .faq-info-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        
+
+	</style>
+</head>
+<body>
+	<!-- FAQ Header -->
+<section class="faq-header">
+    <div class="container">
+        <h1 class="display-6 fw-bold mb-3">
+            <i class="fas fa-question-circle me-3"></i>Frequently Asked Questions
+        </h1>
+        <p class="lead mb-0">Find answers to common questions below</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <!-- FAQ Content -->
+        <div class="col-lg-8 mb-4">
+            <div class="faq-section">
+                <h3 class="mb-4">Common Questions</h3>
+                <ul class="faq-list">
+                    <li class="faq-item">
+                        <p class="faq-question">
+                            <i class="fas fa-globe"></i>1. What is the purpose of this website?
+                        </p>
+                        <p class="faq-answer">
+                            This website was created for implementing E-Commerce purpose. This website is used for learning and making an E-commerce website.
+                        </p>
+                    </li>
+
+                    <li class="faq-item">
+                        <p class="faq-question">
+                            <i class="fas fa-copyright"></i>2. What about copyright infringement?
+                        </p>
+                        <p class="faq-answer">
+                            We don't own any images or items in this website. All of them was collected from the Internet and finally they got gathered to show on website. These pictures on website might violate the copyright, please send an email via <a href="{% url 'contact_us' %}">this</a>  section. We will respond you as soos as it possible.
+                        </p>
+                    </li>
+
+                    <li class="faq-item">
+                        <p class="faq-question">
+                            <i class="fas fa-users"></i>3. Who are we?
+                        </p>
+                        <p class="faq-answer">
+                            We are a group of people who is learning coding and have to make final project. And we decided to create this website as our final project.
+                        </p>
+                    </li>
+                </ul>
+
+                <!-- From Uiverse.io by ryota1231 --> 
+				
+            </div>
+        </div>
+
+        <!-- FAQ Information -->
+        <div class="col-lg-4 mb-4">
+            <div class="faq-info">
+                <h3 class="mb-4">Need More Help?</h3>
+                <p class="lead mb-4">Can't find what you're looking for? We're here to help!</p>
+
+                <div class="faq-info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <strong>Contact Us:</strong><br>
+                        Send us an email with your question and we'll get back to you as soon as possible.
+                    </div>
+                </div>
+
+                <div class="faq-info-item">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <strong>Response Time:</strong><br>
+                        We typically respond within 24-48 hours during business days.
+                    </div>
+                </div>
+
+                <div class="faq-info-item">
+                    <i class="fas fa-book"></i>
+                    <div>
+                        <strong>Book Requests:</strong><br>
+                        Looking for a specific book? Let us know and we'll try to help you find it.
+                    </div>
+                </div>
+
+                <div class="faq-info-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <strong>Report Issues:</strong><br>
+                        Found a broken link or copyright concern? Please report it to us immediately.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+{% endblock %}

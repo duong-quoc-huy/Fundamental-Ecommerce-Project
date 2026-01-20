@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body text-center p-5">
+                    <i class="bi bi-envelope-x text-warning" style="font-size: 4rem;"></i>
+                    <h2 class="mt-4 mb-3">Unsubscribe from Newsletter</h2>
+                    <p class="text-muted mb-4">
+                        Are you sure you want to unsubscribe from our newsletter?<br>
+                        <strong>{{ subscriber.email }}</strong>
+                    </p>
+                    <p class="small text-muted mb-4">
+                        You'll no longer receive updates about new products, exclusive deals, and special offers.
+                    </p>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-lg me-2">
+                            Yes, Unsubscribe
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-secondary btn-lg">
+                            Cancel
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

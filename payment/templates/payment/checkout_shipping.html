@@ -1,0 +1,348 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Checkout - Shipping Information</h2>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Saved Addresses Section -->
+            {% if saved_addresses %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Saved Addresses</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for address in saved_addresses %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card address-card h-100" style="cursor: pointer; transition: all 0.2s;" 
+                                 onclick="fillAddress(
+                                     '{{ address.address_line1|escapejs }}',
+                                     '{{ address.address_line2|escapejs }}',
+                                     '{{ address.city|escapejs }}',
+                                     '{{ address.state_province|escapejs }}',
+                                     '{{ address.zip_code|escapejs }}',
+                                     '{{ address.country|escapejs }}',
+                                     this
+                                 )">
+                                <div class="card-body">
+                                    {% if address.is_default %}
+                                    <span class="badge bg-primary mb-2">Default</span>
+                                    {% endif %}
+                                    {% if address.nickname %}
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ address.nickname }}</h6>
+                                    {% endif %}
+                                    <p class="card-text mb-1"><strong>{{ address.address_line1 }}</strong></p>
+                                    {% if address.address_line2 %}
+                                    <p class="card-text mb-1">{{ address.address_line2 }}</p>
+                                    {% endif %}
+                                    <p class="card-text mb-1">{{ address.city }}, {{ address.state_province }} {{ address.zip_code }}</p>
+                                    <p class="card-text mb-0">{{ address.country }}</p>
+                                    <small class="text-muted">Click to use this address</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'payment:checkout_shipping' %}">
+                {% csrf_token %}
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Shipping Address</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="full_name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" required>
+                            </div>  
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="+84xxxxxxxxx">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="address1" class="form-label">Address Line 1 *</label>
+                            <input type="text" class="form-control" id="address1" name="address1" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="address2" class="form-label">Address Line 2</label>
+                            <input type="text" class="form-control" id="address2" name="address2">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="city" class="form-label">City *</label>
+                                <input type="text" class="form-control" id="city" name="city" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="state" class="form-label">State/Province</label>
+                                <input type="text" class="form-control" id="state" name="state">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="zipcode" class="form-label">Postal Code *</label>
+                                <input type="text" class="form-control" id="zipcode" name="zipcode" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="country" class="form-label">Country *</label>
+                                <input type="text" class="form-control" id="country" name="country" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Payment Method</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="payment_method" id="vnpay" value="vnpay" checked>
+                            <label class="form-check-label d-flex align-items-center" for="vnpay">
+                                <strong>VNPay</strong>
+                                <span class="ms-2 text-muted">(Vietnamese Payment Gateway)</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="paypal" value="paypal">
+                            <label class="form-check-label d-flex align-items-center" for="paypal">
+                                <strong>PayPal</strong>
+                                <span class="ms-2 text-muted">(Credit Card, Debit Card, PayPal Balance)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                    Proceed to Payment
+                </button>
+            </form>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Coupon Section -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>Discount Code</h5>
+                </div>
+                <div class="card-body">
+                    {% if applied_coupon %}
+                    <div class="alert alert-success mb-3" id="coupon-success">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ applied_coupon.code }}</strong> applied
+                                <br>
+                                <small>{{ applied_coupon.description }}</small>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeCoupon()">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="coupon-code" placeholder="Enter coupon code" style="text-transform: uppercase;">
+                        <button class="btn btn-outline-secondary" type="button" onclick="applyCoupon()">
+                            Apply
+                        </button>
+                    </div>
+                    <div id="coupon-message" class="mt-2"></div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <strong id="subtotal-display">${{ subtotal|floatformat:2 }}</strong>
+                    </div>
+                    
+                    {% if discount > 0 %}
+                    <div class="d-flex justify-content-between mb-2 text-success">
+                        <span>Discount:</span>
+                        <strong id="discount-display">-${{ discount|floatformat:2 }}</strong>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tax (10%):</span>
+                        <strong id="tax-display">${{ tax|floatformat:2 }}</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-0">
+                        <span class="h5">Total:</span>
+                        <strong class="h5 text-primary" id="total-display">${{ total|floatformat:2 }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function applyCoupon() {
+    const couponCode = document.getElementById('coupon-code').value.trim();
+    const messageDiv = document.getElementById('coupon-message');
+    
+    if (!couponCode) {
+        messageDiv.innerHTML = '<small class="text-danger">Please enter a coupon code</small>';
+        return;
+    }
+    
+    // Get current subtotal
+    const subtotalText = document.getElementById('subtotal-display').textContent;
+    const subtotal = parseFloat(subtotalText.replace('$', ''));
+    
+    // Show loading
+    messageDiv.innerHTML = '<small class="text-muted">Applying coupon...</small>';
+    
+    fetch("{% url 'payment:apply_coupon' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            coupon_code: couponCode,
+            subtotal: subtotal
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            messageDiv.innerHTML = `<small class="text-success">${data.message}</small>`;
+            
+            // Reload page to show updated prices
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        } else {
+            messageDiv.innerHTML = `<small class="text-danger">${data.message}</small>`;
+        }
+    })
+    .catch(error => {
+        messageDiv.innerHTML = '<small class="text-danger">Error applying coupon. Please try again.</small>';
+        console.error('Error:', error);
+    });
+}
+
+function removeCoupon() {
+    if (!confirm('Remove this coupon?')) {
+        return;
+    }
+    
+    fetch("{% url 'payment:remove_coupon' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        alert('Error removing coupon. Please try again.');
+        console.error('Error:', error);
+    });
+}
+
+// Allow Enter key to apply coupon
+document.getElementById('coupon-code')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        applyCoupon();
+    }
+});
+
+function fillAddress(address1, address2, city, state, zipcode, country, cardElement) {
+    document.getElementById('address1').value = address1;
+    document.getElementById('address2').value = address2;
+    document.getElementById('city').value = city;
+    document.getElementById('state').value = state;
+    document.getElementById('zipcode').value = zipcode;
+    document.getElementById('country').value = country;
+    
+    document.querySelectorAll('.address-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    cardElement.classList.add('selected');
+    document.querySelector('.card-header h5').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const addressCards = document.querySelectorAll('.address-card');
+    addressCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('selected')) {
+                this.style.transform = 'scale(1.02)';
+                this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+            }
+        });
+        card.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('selected')) {
+                this.style.transform = 'scale(1)';
+                this.style.boxShadow = '';
+            }
+        });
+    });
+});
+</script>
+
+<style>
+.address-card {
+    border: 2px solid #e0e0e0;
+}
+.address-card:hover {
+    border-color: #007bff;
+}
+.address-card.selected {
+    border-color: #007bff !important;
+    background-color: #f0f8ff;
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+</style>
+{% endblock %}

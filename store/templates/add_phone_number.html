@@ -1,0 +1,458 @@
+<link rel="stylesheet" href="../../static/css/popup_add_phone.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.6/build/css/intlTelInput.css" />
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+<div class="modal-overlay" id="modal_overlay">
+    <div class="modal-content">
+        <button class="modal-close-btn" id="close_popup" type="button">
+            <i class='bx bx-x'></i>
+        </button>
+
+        <div class="modal-header">
+            <h1 id="modal_title">Add Phone Number</h1>
+        </div>
+
+        <div class="modal-body">
+            <div class="icon-container">
+                <div class="icon-circle">
+                    <i class='bx bxs-phone' id="modal_icon"></i>
+                </div>
+            </div>
+
+            <p class="description-text" id="modal_description">
+                Please enter your mobile number to secure your account and enable 2FA.
+            </p>
+            
+            <!-- Step 1: Phone Input Form -->
+            <form id="phoneForm" style="display: block;">
+                {% csrf_token %}
+                
+                <div class="input-field-group" id="phone_input_wrapper">
+                    <input
+                        type="tel"
+                        class="phone-input-field"
+                        id="phone_input"
+                        placeholder="Enter phone number"
+                        required
+                    />
+                </div>
+                
+                <span class="input-error" id="phone_error"></span>
+
+                <!-- Firebase reCAPTCHA container -->
+                <!-- IMPORTANT: This needs to be visible for reCAPTCHA to work -->
+                <div id="recaptcha-container" style="margin: 20px auto; display: flex; justify-content: center;"></div>
+
+                <div class="modal-footer">
+                    <button type="submit" id="add_phone_btn" class="btn btn-action" disabled>
+                        Send Verification Code
+                    </button>
+                </div>
+            </form>
+
+            <!-- Step 2: OTP Verification Form (hidden initially) -->
+            <form id="otpForm" style="display: none;">
+                <div class="input-field-group">
+                    <input
+                        type="text"
+                        class="phone-input-field"
+                        id="otp_input"
+                        placeholder="Enter 6-digit code"
+                        maxlength="6"
+                        pattern="\d{6}"
+                        required
+                    />
+                </div>
+                
+                <span class="input-error" id="otp_error"></span>
+
+                <div class="modal-footer">
+                    <button type="submit" id="verify_otp_btn" class="btn btn-action">
+                        Verify Code
+                    </button>
+                    <button type="button" id="resend_otp_btn" class="btn btn-secondary" style="margin-top: 10px;">
+                        Resend Code
+                    </button>
+                </div>
+            </form>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage" style="display: none;">
+                <i class='bx bx-check-circle'></i>
+                <span>Phone number verified successfully!</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- intl-tel-input script -->
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.6/build/js/intlTelInput.min.js"></script>
+
+<script>
+
+// FIREBASE CONFIGURATION
+const firebaseConfig = {
+    apiKey: "AIzaSyDnEh5v5eUQ9mgGbhx-lfdHGd_iYnXLbjw",
+    authDomain: "ecommre-otp.firebaseapp.com",
+    projectId: "ecommre-otp",
+    storageBucket: "ecommre-otp.firebasestorage.app",
+    messagingSenderId: "265760181718",
+    appId: "1:265760181718:web:671e6307b8357bc72ee877",
+    measurementId: "G-DJK1JCFGKL"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Global variables
+let confirmationResult = null;
+let recaptchaVerifier = null;
+let phoneIti = null;
+
+
+// Initialize Phone Input
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.querySelector("#phone_input");
+    
+    if (!input) {
+        console.log('Phone input not found');
+        return;
+    }
+
+    // Initialize intl-tel-input
+    phoneIti = window.intlTelInput(input, {
+        initialCountry: "auto",
+        geoIpLookup: function(callback) {
+            fetch('https://ipapi.co/json/')
+                .then(res => res.json())
+                .then(data => callback(data.country_code))
+                .catch(() => callback("vn")); // Default to Vietnam
+        },
+        separateDialCode: true,
+        nationalMode: true,
+        autoPlaceholder: "aggressive",
+        formatOnDisplay: true,
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.6/build/js/utils.js",
+        preferredCountries: ["vn", "us", "gb"],
+        excludeCountries: []
+    });
+
+    // Make available globally
+    window.phoneIti = phoneIti;
+
+    // Validation on blur
+    input.addEventListener('blur', function() {
+        if (input.value.trim()) {
+            if (phoneIti.isValidNumber()) {
+                document.getElementById('phone_input_wrapper').classList.remove('error');
+                document.getElementById('phone_error').style.display = 'none';
+            } else {
+                document.getElementById('phone_input_wrapper').classList.add('error');
+                document.getElementById('phone_error').textContent = 'Please enter a valid phone number';
+                document.getElementById('phone_error').style.display = 'block';
+            }
+        }
+    });
+
+    // Enable button when input changes
+    input.addEventListener('input', function() {
+        const addPhoneBtn = document.getElementById('add_phone_btn');
+        if (input.value.trim().length > 0) {
+            addPhoneBtn.disabled = false;
+            addPhoneBtn.classList.add('active');
+        } else {
+            addPhoneBtn.disabled = true;
+            addPhoneBtn.classList.remove('active');
+        }
+    });
+
+    // DON'T initialize reCAPTCHA on page load
+    // We'll initialize it when the modal opens
+});
+
+
+// Initialize Firebase reCAPTCHA (when modal opens)
+
+function initializeRecaptcha() {
+    console.log('🔄 Initializing reCAPTCHA...');
+    
+    // Clear any existing reCAPTCHA
+    const container = document.getElementById('recaptcha-container');
+    if (container) {
+        container.innerHTML = ''; // Clear previous reCAPTCHA
+    }
+    
+    if (!recaptchaVerifier) {
+        try {
+            recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                'size': 'normal',
+                'callback': (response) => {
+                    console.log('reCAPTCHA solved');
+                },
+                'expired-callback': () => {
+                    console.log(' reCAPTCHA expired, resetting...');
+                    recaptchaVerifier.render().then(widgetId => {
+                        grecaptcha.reset(widgetId);
+                    });
+                }
+            });
+            
+            recaptchaVerifier.render().then(widgetId => {
+                console.log(' reCAPTCHA rendered successfully, widget ID:', widgetId);
+                window.recaptchaWidgetId = widgetId;
+            }).catch(error => {
+                console.error('reCAPTCHA render error:', error);
+            });
+            
+        } catch (error) {
+            console.error(' reCAPTCHA initialization error:', error);
+        }
+    } else {
+        console.log(' reCAPTCHA already initialized');
+    }
+}
+
+
+// Step 1: Submit Phone Number
+
+document.getElementById('phoneForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const addPhoneBtn = document.getElementById('add_phone_btn');
+    const phoneError = document.getElementById('phone_error');
+    
+    // Disable button
+    addPhoneBtn.disabled = true;
+    addPhoneBtn.textContent = 'Validating...';
+    
+    try {
+        // Get phone in E.164 format
+        const phoneNumber = phoneIti.getNumber();
+        console.log('Phone number:', phoneNumber);
+        
+        if (!phoneIti.isValidNumber()) {
+            throw new Error('Please enter a valid phone number');
+        }
+        
+        // Step 1: Validate with Django backend
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        const response = await fetch('/add-phone-number/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken
+            },
+            body: `phone_input=${encodeURIComponent(phoneNumber)}`
+        });
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error || 'Validation failed');
+        }
+        
+        console.log('Backend validation successful');
+        
+        // Step 2: Send OTP via Firebase
+        addPhoneBtn.textContent = 'Sending code...';
+        
+        const appVerifier = recaptchaVerifier;
+        
+        confirmationResult = await firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier);
+        
+        console.log('OTP sent successfully');
+        
+        // Switch to OTP input form
+        showOtpForm();
+        
+    } catch (error) {
+        console.error('Error:', error);
+        phoneError.textContent = error.message || 'Failed to send verification code';
+        phoneError.style.display = 'block';
+        
+        // Re-enable button
+        addPhoneBtn.disabled = false;
+        addPhoneBtn.textContent = 'Send Verification Code';
+        
+        // Reset reCAPTCHA if it was a Firebase error
+        if (recaptchaVerifier) {
+            recaptchaVerifier.render().then(widgetId => {
+                grecaptcha.reset(widgetId);
+            });
+        }
+    }
+});
+
+
+// Switch to OTP Form
+
+function showOtpForm() {
+    document.getElementById('phoneForm').style.display = 'none';
+    document.getElementById('otpForm').style.display = 'block';
+    document.getElementById('modal_title').textContent = 'Verify Your Phone';
+    document.getElementById('modal_description').textContent = 'Enter the 6-digit code we sent to your phone.';
+    document.getElementById('otp_input').focus();
+}
+
+
+// Step 2: Verify OTP
+
+document.getElementById('otpForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const otpInput = document.getElementById('otp_input');
+    const verifyBtn = document.getElementById('verify_otp_btn');
+    const otpError = document.getElementById('otp_error');
+    const code = otpInput.value.trim();
+    
+    if (code.length !== 6) {
+        otpError.textContent = 'Please enter a 6-digit code';
+        otpError.style.display = 'block';
+        return;
+    }
+    
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = 'Verifying...';
+    otpError.style.display = 'none';
+    
+    try {
+        // Confirm OTP with Firebase
+        const result = await confirmationResult.confirm(code);
+        console.log('OTP verified by Firebase');
+        
+        // Get Firebase ID token
+        const idToken = await result.user.getIdToken();
+        console.log('Got ID token');
+        
+        // Send token to Django backend for final verification
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        const response = await fetch('/verify-firebase-phone/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ idToken: idToken })
+        });
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error || 'Verification failed');
+        }
+        
+        console.log('Backend verification successful');
+        
+        // Show success message
+        document.getElementById('otpForm').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'flex';
+        document.getElementById('modal_icon').className = 'bx bx-check-circle';
+        
+        // Redirect after 2 seconds
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Verification error:', error);
+        
+        let errorMessage = 'Invalid verification code';
+        
+        if (error.code === 'auth/invalid-verification-code') {
+            errorMessage = 'Invalid code. Please try again.';
+        } else if (error.code === 'auth/code-expired') {
+            errorMessage = 'Code expired. Please request a new one.';
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+        
+        otpError.textContent = errorMessage;
+        otpError.style.display = 'block';
+        
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = 'Verify Code';
+        
+        // Clear input
+        otpInput.value = '';
+        otpInput.focus();
+    }
+});
+
+
+// Resend OTP
+
+document.getElementById('resend_otp_btn').addEventListener('click', async function() {
+    const resendBtn = this;
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Sending...';
+    
+    try {
+        const phoneNumber = phoneIti.getNumber();
+        
+        // Reinitialize reCAPTCHA
+        if (recaptchaVerifier) {
+            recaptchaVerifier.clear();
+        }
+        
+        // Show phone form again to display new reCAPTCHA
+        document.getElementById('otpForm').style.display = 'none';
+        document.getElementById('phoneForm').style.display = 'block';
+        document.getElementById('modal_title').textContent = 'Add Phone Number';
+        document.getElementById('modal_description').textContent = 'Please verify the reCAPTCHA to resend code.';
+        
+        // Reinitialize
+        initializeRecaptcha();
+        
+        // Pre-fill phone number
+        document.getElementById('phone_input').value = phoneIti.getNumber();
+        document.getElementById('add_phone_btn').disabled = false;
+        document.getElementById('add_phone_btn').classList.add('active');
+        
+    } catch (error) {
+        console.error('Resend error:', error);
+        alert('Failed to resend code. Please try again.');
+    } finally {
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Resend Code';
+    }
+});
+</script>
+
+<style>
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.success-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 8px;
+    color: #155724;
+    margin-top: 20px;
+}
+
+.success-message i {
+    font-size: 24px;
+}
+</style>

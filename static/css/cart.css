@@ -1,0 +1,119 @@
+/* Cart Item Image Styling */
+.cart-item-image {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;      /* Changed from 'cover' to show full product */
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  transition: transform 0.2s ease;
+}
+
+.cart-item-image:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+/* Card Styling */
+.card {
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Quantity Selector */
+.btn-group .btn-sm {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.btn-group input[type="text"] {
+  border-left: 0;
+  border-right: 0;
+  pointer-events: none;
+}
+
+/* Action Links */
+.text-decoration-none:hover {
+  text-decoration: underline !important;
+}
+
+/* Sticky Order Summary */
+.sticky-top {
+  position: sticky;
+  z-index: 100;
+}
+
+/* Promo Code Input */
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cart-item-image {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .sticky-top {
+    position: relative;
+    margin-top: 2rem;
+  }
+  
+  .card-title {
+    font-size: 1rem;
+  }
+  
+  .text-md-end {
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .cart-item-image {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .btn-group {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Badge Styling */
+.badge {
+  font-weight: 500;
+  padding: 0.35em 0.65em;
+}
+
+/* Price Styling */
+.text-decoration-line-through {
+  font-size: 0.875rem;
+}
+
+/* Benefits Icons */
+.bi {
+  flex-shrink: 0;
+}
+
+/* Empty Cart Styling */
+.bi-cart-x {
+  opacity: 0.3;
+}
+
+/* Button Hover Effects */
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-outline-secondary:hover {
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% block title %}Login Page{% endblock %}
+{% block extra_css %}
+<!-- Boxicons CSS -->
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="login-page-wrapper">
+    <section class="container forms">
+        <div class="form login">
+            <div class="form-content">
+                <header>Login</header>
+                <form class="login-form" id="loginForm" method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    {% if request.GET.next %}
+                        <input type="hidden" name="next" value="{{ request.GET.next }}">
+                    {% endif %}
+                    <div class="field input-field">
+                        <input type="email" id="email" name="email" required autocomplete="email" placeholder="Type Your Email">
+                    </div>
+
+                    <div class="field input-field password-wrapper">
+                        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Type your password">
+                        <i class='bx bx-hide eye-icon' data-password-toggle></i>
+                    </div>
+
+                    <div class="form-link">
+                        <a href="{% url 'forgot_password' %}" class="forgot-pass">Forgot password?</a>
+                    </div>
+
+                    <div class="field button-field">
+                        <button type="submit">Login</button>
+                    </div>
+                </form>
+
+                <div class="form-link">
+                    <span>Don't have an account? <a href="{% url 'register' %}" class="link signup-link">Signup</a></span>
+                </div>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="media-options">
+                <a href="{% provider_login_url 'facebook' %}" class="field facebook">
+                    <i class='bx bxl-facebook facebook-icon'></i>
+                    <span>Login with Facebook</span>
+                </a>
+            </div>
+
+            <div class="media-options">
+                <a href="{% provider_login_url 'google' %}" class="field google">
+                    <img src="{% static 'assets/google.png' %}" alt="Google" class="google-img">
+                    <span>Login with Google</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+

@@ -1,0 +1,345 @@
+/* Google Fonts - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* Reset styles within login page wrapper */
+.login-page-wrapper * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Main Container */
+.login-page-wrapper {
+    width: 100%;
+    background: linear-gradient(135deg, #E3F2FD, #FFFFFF); /* change  page color background here */
+}
+
+.login-page-wrapper .container {
+    min-height: calc(100vh - 56px);
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    margin: 0;
+}
+
+/* Login Form Card */
+.login-page-wrapper .form {
+    position: relative;
+    max-width: 430px;
+    width: 100%;
+    padding: 40px;
+    border-radius: 12px;
+    background: #FFF;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    margin: 0 auto;
+}
+
+/* Header */
+.login-page-wrapper header {
+    font-size: 32px;
+    font-weight: 600;
+    color: #232836;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Form */
+.login-page-wrapper form {
+    margin-top: 0;
+}
+
+/* Input Fields */
+.login-page-wrapper .field {
+    position: relative;
+    height: 50px;
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+.login-page-wrapper .field input,
+.login-page-wrapper .field button {
+    height: 100%;
+    width: 100%;
+    border: none;
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 8px;
+}
+
+.login-page-wrapper .field input {
+    outline: none;
+    padding: 0 15px;
+    border: 2px solid #e0e0e0;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.login-page-wrapper .field input:focus {
+    border-color: #667eea;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.login-page-wrapper .field input::placeholder {
+    color: #9499b7;
+    font-weight: 400;
+}
+
+/* Eye Icon for Password */
+.login-page-wrapper .eye-icon {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #8b8b8b;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+}
+
+.login-page-wrapper .eye-icon:hover {
+    color: #667eea;
+}
+
+/* Submit Button */
+.login-page-wrapper .field button {
+    color: #fff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.login-page-wrapper .field button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.login-page-wrapper .field button:active {
+    transform: translateY(0);
+}
+
+/* Form Links */
+.login-page-wrapper .form-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.login-page-wrapper .form-link span,
+.login-page-wrapper .form-link a {
+    font-size: 14px;
+    font-weight: 400;
+    color: #232836;
+}
+
+.login-page-wrapper .form a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.login-page-wrapper .form a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+.login-page-wrapper .forgot-pass {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* Divider Line */
+.login-page-wrapper .line {
+    position: relative;
+    height: 1px;
+    width: 100%;
+    margin: 36px 0 25px;
+    background-color: #e0e0e0;
+}
+
+.login-page-wrapper .line::before {
+    content: 'Or';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #FFF;
+    color: #8b8b8b;
+    padding: 0 15px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Social Media Options */
+.login-page-wrapper .media-options {
+    margin-top: 15px;
+}
+
+.login-page-wrapper .media-options a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Facebook Button */
+.login-page-wrapper a.facebook {
+    color: #fff;
+    background-color: #4267b2;
+}
+
+.login-page-wrapper a.facebook:hover {
+    background-color: #365899;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 103, 178, 0.4);
+}
+
+.login-page-wrapper a.facebook .facebook-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 28px;
+    width: 28px;
+    color: #4267b2;
+    font-size: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+}
+
+/* Google Button */
+.login-page-wrapper a.google {
+    border: 2px solid #e0e0e0;
+    background-color: #fff;
+}
+
+.login-page-wrapper a.google:hover {
+    background-color: #f8f9fa;
+    border-color: #d0d0d0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-page-wrapper a.google span {
+    font-weight: 500;
+    color: #232836;
+}
+
+.login-page-wrapper img.google-img {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 24px;
+    width: 24px;
+    object-fit: cover;
+}
+
+/* Signup Section */
+.login-page-wrapper .form-content > .form-link {
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+    .login-page-wrapper .form {
+        padding: 35px 25px;
+    }
+    
+    .login-page-wrapper header {
+        font-size: 28px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .login-page-wrapper .container {
+        padding: 15px;
+    }
+    
+    .login-page-wrapper .form {
+        padding: 30px 20px;
+    }
+    
+    .login-page-wrapper header {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+    
+    .login-page-wrapper .field {
+        height: 45px;
+        margin-top: 15px;
+    }
+    
+    .login-page-wrapper .field input,
+    .login-page-wrapper .field button {
+        font-size: 14px;
+    }
+    
+    .login-page-wrapper .media-options a {
+        height: 45px;
+        font-size: 14px;
+    }
+}
+
+/* Animation for form appearance */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-page-wrapper .form {
+    animation: fadeInUp 0.6s ease;
+}
+
+/* Loading state for button */
+.login-page-wrapper .field button.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.login-page-wrapper .field button.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

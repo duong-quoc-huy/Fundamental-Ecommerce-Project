@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Authentication Page {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+{% block content %}
+<div class="register-page-wrapper">
+  <div class="register-container">
+    <div class="register-card">
+      <div class="register-header">
+        <h2>Email Verification</h2>
+        <p>Enter the 6-digit code we sent to your email.</p>
+      </div>
+
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="submit-btn"><span>Verify OTP</span></button>
+      </form>
+
+      <div class="login-link">
+        <p>Didn't receive the code? <a href="{% url 'resend_otp' %}">Resend</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

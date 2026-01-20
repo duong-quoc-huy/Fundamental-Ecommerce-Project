@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %}Connected Accounts{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            padding: 40px 20px;
+        }
+
+        .connections-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header-section h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header-section p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .connections-content {
+            padding: 30px;
+        }
+
+        .account-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .account-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .account-card.connected {
+            border-color: #4caf50;
+            background: #f1f8f4;
+        }
+
+        .account-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .provider-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .provider-logo.google {
+            background: #4285f4;
+            color: white;
+        }
+
+        .provider-logo.facebook {
+            background: #1877f2;
+            color: white;
+        }
+
+        .account-details h3 {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .account-details p {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .status-badge.connected {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-badge.not-connected {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .connect-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .connect-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .disconnect-btn {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #ef5350;
+        }
+
+        .disconnect-btn:hover {
+            background: #ef5350;
+            color: white;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-box h4 {
+            color: #1565c0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p {
+            color: #424242;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #f5f5f5;
+            color: #666;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            .account-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .account-info {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="connections-container">
+    <div class="header-section">
+        <h1><i class="fas fa-link"></i> Connected Accounts</h1>
+        <p>Manage your social login connections</p>
+    </div>
+
+    <div class="connections-content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="padding: 12px; margin-bottom: 20px; border-radius: 8px; background: {% if 'success' in message.tags %}#d4edda{% else %}#f8d7da{% endif %};">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% get_providers as socialaccount_providers %}
+        
+        <!-- Google Account -->
+        <div class="account-card {% if accounts.google %}connected{% endif %}">
+            <div class="account-info">
+                <div class="provider-logo google">
+                    <i class="fab fa-google"></i>
+                </div>
+                <div class="account-details">
+                    <h3>Google</h3>
+                    {% if accounts.google %}
+                        <p>{{ accounts.google.0.extra_data.email }}</p>
+                        <span class="status-badge connected">
+                            <i class="fas fa-check-circle"></i> Connected
+                        </span>
+                    {% else %}
+                        <p>Not connected</p>
+                        <span class="status-badge not-connected">
+                            <i class="fas fa-times-circle"></i> Not Connected
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if accounts.google %}
+                <form method="POST" action="{% url 'socialaccount_connections' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="account" value="{{ accounts.google.0.id }}">
+                    <button type="submit" class="action-btn disconnect-btn">
+                        <i class="fas fa-unlink"></i> Disconnect
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% provider_login_url 'google' process='connect' %}" class="action-btn connect-btn">
+                    <i class="fas fa-link"></i> Connect
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Facebook Account -->
+        <div class="account-card {% if accounts.facebook %}connected{% endif %}">
+            <div class="account-info">
+                <div class="provider-logo facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+                <div class="account-details">
+                    <h3>Facebook</h3>
+                    {% if accounts.facebook %}
+                        <p>{{ accounts.facebook.0.extra_data.name }}</p>
+                        <span class="status-badge connected">
+                            <i class="fas fa-check-circle"></i> Connected
+                        </span>
+                    {% else %}
+                        <p>Not connected</p>
+                        <span class="status-badge not-connected">
+                            <i class="fas fa-times-circle"></i> Not Connected
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if accounts.facebook %}
+                <form method="POST" action="{% url 'socialaccount_connections' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="account" value="{{ accounts.facebook.0.id }}">
+                    <button type="submit" class="action-btn disconnect-btn">
+                        <i class="fas fa-unlink"></i> Disconnect
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% provider_login_url 'facebook' process='connect' %}" class="action-btn connect-btn">
+                    <i class="fas fa-link"></i> Connect
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="info-box">
+            <h4><i class="fas fa-info-circle"></i> Why connect multiple accounts?</h4>
+            <p>
+                Connecting multiple social accounts gives you more flexibility when logging in. 
+                You can use any of your connected accounts to access your Firefly Ecommerce profile. 
+                Your data stays the same regardless of which login method you use.
+            </p>
+        </div>
+
+        <a href="{% url 'account_settings' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Settings
+        </a>
+    </div>
+</div>
+</body>
+</html>
+
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Search Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-3">
+                {% if query %}
+                    Search Results for "{{ query }}"
+                {% else %}
+                    Browse All Products
+                {% endif %}
+            </h2>
+            <p class="text-muted">Found {{ total_results }} product{{ total_results|pluralize }}</p>
+        </div>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" action="{% url 'search' %}" class="row g-3">
+                <!-- Search Input -->
+                <div class="col-md-5">
+                    <label for="search" class="form-label">Search</label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="search" 
+                           name="q" 
+                           placeholder="Search products..." 
+                           value="{{ query }}">
+                </div>
+
+                <!-- Category Filter -->
+                <div class="col-md-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select class="form-select" id="category" name="category">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" 
+                                    {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Sort By -->
+                <div class="col-md-3">
+                    <label for="sort" class="form-label">Sort By</label>
+                    <select class="form-select" id="sort" name="sort">
+                        <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest First</option>
+                        <option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="name" {% if selected_sort == 'name' %}selected{% endif %}>Name: A-Z</option>
+                    </select>
+                </div>
+
+                <!-- Search Button -->
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Go
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results -->
+    {% if products %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            {% for product in products %}
+                <div class="col">
+                    <div class="card h-100 product-card">
+                        <!-- Product Image -->
+                        <a href="{% url 'product' product.slug %}" class="text-decoration-none">
+                            {% if product.variants.first.images.first %}
+                                <img src="{{ product.variants.first.images.first.image.url }}" 
+                                     class="card-img-top product-image" 
+                                     alt="{{ product.name }}"
+                                     style="height: 250px; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                     style="height: 250px;">
+                                    <span class="text-muted">No Image</span>
+                                </div>
+                            {% endif %}
+                        </a>
+
+                        <div class="card-body d-flex flex-column">
+                            <!-- Category Badge -->
+                            <span class="badge bg-secondary mb-2 align-self-start">
+                                {{ product.category.name }}
+                            </span>
+
+                            <!-- Product Name -->
+                            <h5 class="card-title">
+                                <a href="{% url 'product' product.slug %}" 
+                                   class="text-decoration-none text-dark">
+                                    {{ product.name }}
+                                </a>
+                            </h5>
+
+                            <!-- Price -->
+                            <div class="mt-auto">
+                                {% if product.is_sale %}
+                                    <div class="mb-2">
+                                        <span class="text-danger fw-bold fs-5">
+                                            ${{ product.sale_price }}
+                                        </span>
+                                        <span class="text-muted text-decoration-line-through ms-2">
+                                            ${{ product.price }}
+                                        </span>
+                                        <span class="badge bg-danger ms-2">SALE</span>
+                                    </div>
+                                {% else %}
+                                    <div class="mb-2">
+                                        <span class="fw-bold fs-5">${{ product.price }}</span>
+                                    </div>
+                                {% endif %}
+
+                                <!-- Stock Status -->
+                                {% if product.stock > 0 %}
+                                    <small class="text-success">
+                                        <i class="bi bi-check-circle"></i> In Stock ({{ product.stock }})
+                                    </small>
+                                {% else %}
+                                    <small class="text-danger">
+                                        <i class="bi bi-x-circle"></i> Out of Stock
+                                    </small>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Card Footer with Action -->
+                        <div class="card-footer bg-transparent border-top-0">
+                            <a href="{% url 'product' product.slug %}" 
+                               class="btn btn-outline-primary w-100">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- No Results -->
+        <div class="text-center py-5">
+            <i class="bi bi-search" style="font-size: 4rem; color: #ccc;"></i>
+            <h3 class="mt-3 text-muted">No products found</h3>
+            <p class="text-muted">Try adjusting your search or filters</p>
+            <a href="{% url 'search' %}" class="btn btn-primary">Browse All Products</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.product-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e0e0e0;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.product-image {
+    transition: transform 0.3s;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+.card-img-top {
+    overflow: hidden;
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register Page{% endblock %}
+
+
+{% block extra_css %}
+<!-- Boxicons CSS for icons -->
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="register-page-wrapper">
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <h2>Create Account</h2>
+                <p>Join us today</p>
+            </div>
+
+            <form method="POST" novalidate id="registerForm">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="form-group {% if field.errors %}has-error{% endif %}">
+                        
+                        {% if field.name == 'gender' %}
+                            <!-- Gender Radio Buttons -->
+                            <label class="field-label">{{ field.label }}</label>
+                            <div class="radio-group">
+                                {% for choice in field %}
+                                    <label class="radio-label">
+                                        {{ choice.tag }}
+                                        <span>{{ choice.choice_label }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+
+                        {% elif field.name == 'term_of_service_and_privacy' %}
+                            <!-- Checkbox with label -->
+                            <div class="checkbox-wrapper">
+                                <label class="checkbox-label">
+                                    {{ field }}
+                                    {{ field.label }}
+                                </label>
+                            </div>
+
+                        {% elif field.name == 'subscribe_news' %}
+                            <!-- Checkbox with label -->
+                            <div class="checkbox-wrapper">
+                                <label class="checkbox-label">
+                                    {{ field }}
+                                    {{ field.label }}
+                                </label>
+                            </div>
+
+                        {% elif field.name == 'password1' or field.name == 'password2' %}
+                            <!-- Password Fields with Eye Icon -->
+                            <div class="input-wrapper password-wrapper">
+                                {{ field }}
+                                <i class='bx bx-hide eye-icon' data-password-toggle></i>
+                            </div>
+
+                        {% else %}
+                            <!-- Regular Input Fields -->
+                            <div class="input-wrapper">
+                                {{ field }}
+                            </div>
+
+                        {% endif %}
+
+                        {% if field.errors %}
+                            <div class="error-message">
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
+                        
+                        {% if field.help_text %}
+                            <small class="help-text">{{ field.help_text|safe }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+
+                {% if form.non_field_errors %}
+                    <div class="error-box">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                
+
+                <button type="submit" class="submit-btn">
+                    <span>Create Account</span>
+                </button>
+            </form>
+
+            <div class="login-link">
+                <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
